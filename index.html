@@ -230,13 +230,15 @@ const storage = getStorage(fbApp);
 let itens         = [];
 let movimentacoes = [];
 let responsaveis  = [];
+let categorias    = [];
 let tabAtual      = "estoque";
 let busca         = "";
 let filtroCategoria = "Todos";
 let fotoTemp      = null;
 
-const CATEGORIAS = ["EPI","Ferramenta","Consumível","Peça de Reposição","Elétrico","Hidráulico","Outros"];
+const CATEGORIAS_PADRAO = ["EPI","Ferramenta","Consumível","Peça de Reposição","Elétrico","Hidráulico","Outros"];
 const UNIDADES   = ["un","par","cx","kg","m","L","m²","rolo"];
+const getCategorias = () => [...new Set([...CATEGORIAS_PADRAO, ...categorias.map(c=>c.nome)])];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const $ = id => document.getElementById(id);
@@ -285,6 +287,9 @@ onSnapshot(query(collection(db,"movimentacoes"),orderBy("criadoEm","desc")),snap
 });
 onSnapshot(collection(db,"responsaveis"),snap=>{
   responsaveis=snap.docs.map(d=>({id:d.id,...d.data()}));renderTab();
+});
+onSnapshot(query(collection(db,"categorias"),orderBy("nome")),snap=>{
+  categorias=snap.docs.map(d=>({id:d.id,...d.data()}));renderTab();
 });
 
 // ── Data badge ────────────────────────────────────────────────────────────────
@@ -341,7 +346,7 @@ function renderEstoque(){
 
     <div class="section-label">Categoria</div>
     <div class="pills">
-      ${["Todos",...CATEGORIAS].map(c=>`<span class="pill${filtroCategoria===c?" active":""}" onclick="setCategoria('${esc(c)}')">${c}</span>`).join("")}
+      ${["Todos",...getCategorias()].map(c=>`<span class="pill${filtroCategoria===c?" active":""}" onclick="setCategoria('${esc(c)}')">${c}</span>`).join("")}
     </div>
 
     <div class="section-label">Itens em estoque</div>
@@ -414,7 +419,11 @@ function renderHistorico(){
 
 // ── RENDER EQUIPE ─────────────────────────────────────────────────────────────
 function renderEquipe(){
+  const cats = getCategorias();
+  const catsCustom = categorias; // apenas as salvas no Firebase
+
   let html=`
+    <!-- Responsáveis -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
       <div style="font-size:16px;font-weight:700;">Responsáveis</div>
       <button class="btn btn-purple btn-sm" onclick="abrirModalResponsavel()">+ Responsável</button>
@@ -432,6 +441,39 @@ function renderEquipe(){
           <button class="btn btn-danger btn-sm" onclick="deletarResp('${r.id}')">🗑️</button>
         </div>
       </div>`).join("")}
+
+    <!-- Categorias -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:28px 0 16px;">
+      <div style="font-size:16px;font-weight:700;">Categorias</div>
+    </div>
+
+    <!-- Padrão -->
+    <div class="section-label" style="margin-bottom:8px;">Categorias padrão (fixas)</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;">
+      ${["EPI","Ferramenta","Consumível","Peça de Reposição","Elétrico","Hidráulico","Outros"].map(c=>`
+        <span class="badge badge-purple" style="font-size:13px;padding:5px 12px;">${esc(c)}</span>
+      `).join("")}
+    </div>
+
+    <!-- Customizadas -->
+    <div class="section-label" style="margin-bottom:8px;">Categorias personalizadas</div>
+    ${catsCustom.length===0?`<div style="color:#9ca3af;font-size:13px;margin-bottom:16px;">Nenhuma categoria personalizada ainda.</div>`
+    :`<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+        ${catsCustom.map(c=>`
+          <div style="display:flex;align-items:center;gap:6px;background:#faf7ff;border:1.5px solid #e9d5ff;border-radius:999px;padding:5px 10px 5px 14px;">
+            <span style="font-size:13px;font-weight:600;color:#5b21b6;">${esc(c.nome)}</span>
+            <button onclick="deletarCategoria('${c.id}')" style="background:#dc2626;color:#fff;border:none;border-radius:50%;width:18px;height:18px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">×</button>
+          </div>
+        `).join("")}
+      </div>`}
+
+    <!-- Adicionar nova -->
+    <div style="display:flex;gap:10px;">
+      <input id="inp-nova-cat" placeholder="ex: Lubrificante, Abrasivo, Fixação..." 
+        class="search-input" style="flex:1"
+        onkeydown="if(event.key==='Enter')adicionarCategoria()"/>
+      <button class="btn btn-purple" onclick="adicionarCategoria()">+ Adicionar</button>
+    </div>
   `;
   $("main").innerHTML=html;
 }
@@ -473,7 +515,7 @@ window.abrirModalItem=id=>{
       </div>
       <div class="form-group">
         <label>Categoria</label>
-        <select id="f-categoria">${CATEGORIAS.map(c=>`<option${item.categoria===c?" selected":""}>${c}</option>`).join("")}</select>
+        <select id="f-categoria">${getCategorias().map(c=>`<option${item.categoria===c?" selected":""}>${c}</option>`).join("")}</select>
       </div>
       <div class="form-group">
         <label>Localização</label>
@@ -675,6 +717,24 @@ window.submitResp=async id=>{
 window.deletarResp=async id=>{
   if(!confirm("Excluir responsável?"))return;
   await deleteDoc(doc(db,"responsaveis",id));
+};
+
+// ── CATEGORIAS ────────────────────────────────────────────────────────────────
+window.adicionarCategoria=async()=>{
+  const inp=$("inp-nova-cat");
+  const nome=inp?.value?.trim();
+  if(!nome){alert("Digite o nome da categoria");return;}
+  const todas=getCategorias();
+  if(todas.map(c=>c.toLowerCase()).includes(nome.toLowerCase())){alert("Essa categoria já existe!");return;}
+  try{
+    await addDoc(collection(db,"categorias"),{nome,criadoEm:serverTimestamp()});
+    inp.value="";
+  }catch(e){alert("Erro: "+e.message);}
+};
+
+window.deletarCategoria=async id=>{
+  if(!confirm("Excluir esta categoria?"))return;
+  await deleteDoc(doc(db,"categorias",id));
 };
 
 // ── MODAL RELATÓRIO ───────────────────────────────────────────────────────────
