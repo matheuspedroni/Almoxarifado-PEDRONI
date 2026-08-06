@@ -238,6 +238,7 @@ let fotoTemp      = null;
 
 const CATEGORIAS_PADRAO = ["EPI","Ferramenta","Consumível","Peça de Reposição","Elétrico","Hidráulico","Outros"];
 const UNIDADES   = ["un","par","cx","kg","m","L","m²","rolo"];
+const SETORES=["Maquina Blocos Gervasi","Maquina Blocos 02","Prensa Tubos","Tubos Vibrados","Fossas","Tampas/Leitos","Caixas","Pessoa/Geral"];
 const getCategorias = () => [...new Set([...CATEGORIAS_PADRAO, ...categorias.map(c=>c.nome)])];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -364,6 +365,7 @@ function renderEstoque(){
                 <span class="badge badge-purple">${esc(item.categoria)}</span>
                 <span class="badge ${st.cls}">${st.label}</span>
                 ${item.localizacao?`<span>📍 ${esc(item.localizacao)}</span>`:""}
+                ${item.preco?`<span>💰 R$ ${Number(item.preco).toFixed(2)}</span>`:""}
               </div>
               ${item.observacoes?`<div style="font-size:12px;color:#9ca3af;font-style:italic;">${esc(item.observacoes)}</div>`:""}
             </div>
@@ -533,6 +535,10 @@ window.abrirModalItem=id=>{
         <label>Qtd. Mínima</label>
         <input id="f-qtdmin" type="number" value="${item.qtdMinima||0}" min="0"/>
       </div>
+      <div class="form-group">
+        <label>Preço unitário (R$)</label>
+        <input id="f-preco" type="number" step="0.01" value="${item.preco||0}" min="0" placeholder="ex: 8.50"/>
+      </div>
       <div class="full form-group">
         <label>Observações</label>
         <textarea id="f-obs" placeholder="Fornecedor, marca, etc.">${esc(item.observacoes||"")}</textarea>
@@ -572,6 +578,7 @@ window.submitItem=async(id,existURL,existPath)=>{
     nome,codigo:$("f-codigo").value.trim(),categoria:$("f-categoria").value,
     localizacao:$("f-local").value.trim(),quantidade:Number($("f-qtd").value),
     qtdMinima:Number($("f-qtdmin").value),unidade:$("f-unidade").value,
+    preco:Number($("f-preco")?.value)||0,
     observacoes:$("f-obs").value.trim(),
     fotoURL:fotoTemp?.url||existURL||"",fotoPath:fotoTemp?.path||existPath||""
   };
@@ -631,8 +638,8 @@ window.abrirModalMov=id=>{
         <input id="m-colab" placeholder="Nome do colaborador"/>
       </div>
       <div class="full form-group">
-        <label>Equipamento / Destino *</label>
-        <input id="m-equip" placeholder="ex: Prensa Vibradora #2"/>
+        <label>Equipamento / Setor *</label>
+        <select id="m-equip"><option value="">Selecione...</option>${SETORES.map(s=>`<option>${s}</option>`).join("")}</select>
       </div>
       <div class="full form-group">
         <label>Observação</label>
