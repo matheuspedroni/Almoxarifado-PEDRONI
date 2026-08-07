@@ -238,7 +238,7 @@ let fotoTemp      = null;
 
 const CATEGORIAS_PADRAO = ["EPI","Ferramenta","Consumível","Peça de Reposição","Elétrico","Hidráulico","Outros"];
 const UNIDADES   = ["un","par","cx","kg","m","L","m²","rolo"];
-const SETORES=["Maquina Blocos Gervasi","Maquina Blocos 02","Prensa Tubos","Tubos Vibrados","Fossas","Tampas/Leitos","Caixas","Pessoa/Geral"];
+const SETORES=["Blocos maquina PWR","Blocos maquina Gervasi","Tubos maquina LKR","Tubos vibrados","Tubos Maquina Tuber","Fossas","Caixas","Tampas/Leitos","Central dosadora 01","Central dosadora 02 (nova)","Pessoa/Geral"];
 const getCategorias = () => [...new Set([...CATEGORIAS_PADRAO, ...categorias.map(c=>c.nome)])];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -493,8 +493,23 @@ window.fecharModal=()=>{
 function setSalvando(v){$("loading-overlay").style.display=v?"flex":"none";}
 
 // ── MODAL ITEM ────────────────────────────────────────────────────────────────
+let comprasEmEdicao=[];
+window.addCompraItem=(id)=>{
+  const data=$("c-data")?.value, preco=Number($("c-preco")?.value)||0;
+  if(!data||preco<=0){alert("Informe data e preço da compra");return;}
+  comprasEmEdicao.push({data,preco,forn:$("c-forn")?.value?.trim()||""});
+  // re-renderiza a lista de compras dentro do modal sem fechar
+  const box=$("compras-lista");
+  const ordenadas=[...comprasEmEdicao].sort((a,b)=>(b.data||"").localeCompare(a.data||""));
+  if(box) box.innerHTML=ordenadas.map(c=>`<div style="display:flex;justify-content:space-between;padding:3px 0;border-top:1px solid #ececec;"><span>${c.data||"?"}${c.forn?` · ${c.forn}`:""}</span><b>R$ ${Number(c.preco).toFixed(2)}</b></div>`).join("");
+  // atualiza o "preço vigente"
+  const vig=$("compras-box")?.querySelector("div");
+  if(vig) vig.innerHTML=`Preço vigente (última compra): <b style="color:#4c1d95;">R$ ${Number(ordenadas[0].preco).toFixed(2)}</b>`;
+  $("c-data").value="";$("c-preco").value="";$("c-forn").value="";
+};
 window.abrirModalItem=id=>{
   const item=id?itens.find(i=>i.id===id):{};
+  comprasEmEdicao=item.compras?JSON.parse(JSON.stringify(item.compras)):[];
   const titulo=id?"Editar Item":"Novo Item";
   abrirModal(titulo,`
     <div class="form-grid">
@@ -535,9 +550,22 @@ window.abrirModalItem=id=>{
         <label>Qtd. Mínima</label>
         <input id="f-qtdmin" type="number" value="${item.qtdMinima||0}" min="0"/>
       </div>
-      <div class="form-group">
-        <label>Preço unitário (R$)</label>
-        <input id="f-preco" type="number" step="0.01" value="${item.preco||0}" min="0" placeholder="ex: 8.50"/>
+      <div class="full form-group">
+        <label>Histórico de compras</label>
+        <div id="compras-box" style="background:#f7f5f0;border:1px solid #e0dcd2;border-radius:8px;padding:10px;">
+          ${(item.compras&&item.compras.length)
+            ? `<div style="font-size:12px;color:#6b7280;margin-bottom:6px;">Preço vigente (última compra): <b style="color:#4c1d95;">R$ ${Number([...item.compras].sort((a,b)=>(b.data||"").localeCompare(a.data||""))[0].preco).toFixed(2)}</b></div>`
+            : `<div style="font-size:12px;color:#9ca3af;margin-bottom:6px;">Nenhuma compra cadastrada ainda.</div>`}
+          <div id="compras-lista" style="font-size:12px;">
+            ${(item.compras||[]).slice().sort((a,b)=>(b.data||"").localeCompare(a.data||"")).map(c=>`<div style="display:flex;justify-content:space-between;padding:3px 0;border-top:1px solid #ececec;"><span>${c.data||"?"}${c.forn?` · ${esc(c.forn)}`:""}</span><b>R$ ${Number(c.preco).toFixed(2)}</b></div>`).join("")}
+          </div>
+          <div style="display:flex;gap:6px;margin-top:8px;align-items:end;flex-wrap:wrap;">
+            <div style="flex:1;min-width:90px;"><label style="font-size:11px;">Data</label><input id="c-data" type="date" style="width:100%;padding:5px;"/></div>
+            <div style="flex:1;min-width:80px;"><label style="font-size:11px;">Preço R$</label><input id="c-preco" type="number" step="0.01" min="0" placeholder="8.50" style="width:100%;padding:5px;"/></div>
+            <div style="flex:1;min-width:90px;"><label style="font-size:11px;">Fornecedor</label><input id="c-forn" placeholder="opcional" style="width:100%;padding:5px;"/></div>
+            <button type="button" class="btn btn-secondary" style="padding:6px 12px;" onclick="addCompraItem('${id||""}')">+ Add</button>
+          </div>
+        </div>
       </div>
       <div class="full form-group">
         <label>Observações</label>
@@ -578,7 +606,8 @@ window.submitItem=async(id,existURL,existPath)=>{
     nome,codigo:$("f-codigo").value.trim(),categoria:$("f-categoria").value,
     localizacao:$("f-local").value.trim(),quantidade:Number($("f-qtd").value),
     qtdMinima:Number($("f-qtdmin").value),unidade:$("f-unidade").value,
-    preco:Number($("f-preco")?.value)||0,
+    compras:comprasEmEdicao,
+    preco:(comprasEmEdicao.length?Number([...comprasEmEdicao].sort((a,b)=>(b.data||"").localeCompare(a.data||""))[0].preco)||0:0),
     observacoes:$("f-obs").value.trim(),
     fotoURL:fotoTemp?.url||existURL||"",fotoPath:fotoTemp?.path||existPath||""
   };
