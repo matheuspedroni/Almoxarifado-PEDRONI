@@ -10,42 +10,26 @@
 <style>
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f0ebe0;color:#1a1a1a;min-height:100vh;}
-
-  /* ── Header ── */
-  #header{background:#fff;border-bottom:1px solid #e5e0d8;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+  #header{background:#fff;border-bottom:1px solid #e5e0d8;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06);}
   #header .logo{display:flex;align-items:center;gap:10px;}
   #header .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#5b21b6,#7c3aed);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
-  #header .logo-text{font-size:17px;font-weight:700;color:#1a1a1a;}
+  #header .logo-text{font-size:17px;font-weight:700;}
   #header .date-badge{font-size:12px;color:#16a34a;font-weight:600;display:flex;align-items:center;gap:5px;}
   #header .date-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:#16a34a;display:inline-block;}
-
-  /* ── Tabs ── */
-  #tabs{background:#fff;border-bottom:1px solid #e5e0d8;padding:0 16px;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;}
+  #tabs{background:#fff;border-bottom:1px solid #e5e0d8;padding:0 16px;display:flex;overflow-x:auto;scrollbar-width:none;}
   #tabs::-webkit-scrollbar{display:none;}
   .tab-btn{padding:14px 16px;font-size:13px;font-weight:500;color:#6b7280;border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;display:flex;align-items:center;gap:5px;transition:all .15s;}
   .tab-btn.active{color:#5b21b6;border-bottom-color:#5b21b6;font-weight:600;}
   .tab-btn:hover:not(.active){color:#374151;}
-
-  /* ── Layout ── */
   #main{max-width:860px;margin:0 auto;padding:24px 16px 80px;}
-
-  /* ── Cards ── */
-  .card{background:#fff;border:1px solid #e5e0d8;border-radius:12px;padding:24px;margin-bottom:20px;}
-  .card-title{font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
-
-  /* ── Form ── */
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
   .form-grid .full{grid-column:1/-1;}
   .form-group{display:flex;flex-direction:column;gap:5px;}
   .form-group label{font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.04em;}
-  .form-group input,.form-group select,.form-group textarea{
-    border:1px solid #d1cdc7;border-radius:8px;padding:10px 12px;font-size:14px;color:#1a1a1a;
-    background:#fff;outline:none;transition:border .15s;width:100%;font-family:inherit;}
+  .form-group input,.form-group select,.form-group textarea{border:1px solid #d1cdc7;border-radius:8px;padding:10px 12px;font-size:14px;color:#1a1a1a;background:#fff;outline:none;transition:border .15s;width:100%;font-family:inherit;}
   .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.1);}
   .form-group input::placeholder,.form-group textarea::placeholder{color:#b0a99f;}
   .form-group textarea{resize:vertical;min-height:72px;}
-
-  /* ── Botões ── */
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit;}
   .btn-primary{background:#5b21b6;color:#fff;width:100%;padding:13px;font-size:14px;border-radius:8px;margin-top:4px;}
   .btn-primary:hover{background:#4c1d95;}
@@ -61,14 +45,10 @@
   .btn-red:hover{background:#b91c1c;}
   .btn-sm{padding:7px 12px;font-size:12px;}
   .btn-full{width:100%;}
-
-  /* ── Pills / filtros ── */
   .pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
   .pill{padding:6px 14px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #d1cdc7;background:#fff;color:#6b7280;transition:all .15s;}
   .pill.active{background:#5b21b6;color:#fff;border-color:#5b21b6;}
   .pill:hover:not(.active){border-color:#7c3aed;color:#5b21b6;}
-
-  /* ── Badges ── */
   .badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;}
   .badge-green{background:#dcfce7;color:#16a34a;}
   .badge-yellow{background:#fef9c3;color:#a16207;}
@@ -77,97 +57,78 @@
   .badge-blue{background:#dbeafe;color:#1d4ed8;}
   .badge-purple{background:#ede9fe;color:#5b21b6;}
   .badge-gray{background:#f3f4f6;color:#6b7280;}
-
-  /* ── Item card ── */
   .item-card{background:#fff;border:1px solid #e5e0d8;border-radius:10px;padding:14px 16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;}
-  .item-foto{width:60px;height:60px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#f0ebe0;display:flex;align-items:center;justify-content:center;font-size:24px;}
-  .item-foto img{width:60px;height:60px;border-radius:8px;object-fit:cover;}
+  .item-foto{width:60px;height:60px;border-radius:8px;flex-shrink:0;background:#f0ebe0;display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden;}
+  .item-foto img{width:60px;height:60px;object-fit:cover;}
   .item-info{flex:1;min-width:0;}
-  .item-nome{font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:3px;}
+  .item-nome{font-size:14px;font-weight:700;margin-bottom:3px;}
   .item-meta{font-size:12px;color:#6b7280;margin-bottom:6px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
   .item-qtd{font-size:26px;font-weight:800;line-height:1;text-align:right;}
   .item-qtd-label{font-size:11px;color:#6b7280;text-align:right;}
-  .item-actions{display:flex;gap:6px;margin-top:10px;}
-
-  /* ── Mov card ── */
+  .item-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
   .mov-card{background:#fff;border:1px solid #e5e0d8;border-radius:10px;padding:14px 16px;margin-bottom:8px;}
   .mov-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-  .mov-nome{font-size:14px;font-weight:700;color:#1a1a1a;}
+  .mov-nome{font-size:14px;font-weight:700;}
   .mov-qtd-saida{font-size:20px;font-weight:800;color:#dc2626;}
   .mov-qtd-entrada{font-size:20px;font-weight:800;color:#16a34a;}
   .mov-meta{font-size:12px;color:#6b7280;display:flex;flex-wrap:wrap;gap:8px;}
   .mov-date{font-size:11px;color:#b0a99f;margin-top:4px;}
-
-  /* ── Alerta crítico ── */
   .alert-critico{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px 16px;margin-bottom:14px;}
   .alert-critico p:first-child{font-size:12px;font-weight:700;color:#c2410c;margin-bottom:3px;}
   .alert-critico p:last-child{font-size:12px;color:#ea580c;}
-
-  /* ── Stats header ── */
   .stats-row{display:flex;gap:10px;margin-bottom:20px;}
   .stat-card{flex:1;background:#fff;border:1px solid #e5e0d8;border-radius:10px;padding:14px;text-align:center;}
   .stat-num{font-size:28px;font-weight:800;color:#5b21b6;line-height:1;}
   .stat-label{font-size:11px;color:#6b7280;margin-top:3px;font-weight:500;}
   .stat-card.danger .stat-num{color:#dc2626;}
-
-  /* ── Busca ── */
   .search-row{display:flex;gap:10px;margin-bottom:14px;}
   .search-input{flex:1;border:1px solid #d1cdc7;border-radius:8px;padding:10px 14px;font-size:14px;background:#fff;outline:none;color:#1a1a1a;}
   .search-input:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.1);}
   .search-input::placeholder{color:#b0a99f;}
-
-  /* ── Seção label ── */
   .section-label{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
-
-  /* ── Responsável card ── */
   .resp-card{background:#fff;border:1px solid #e5e0d8;border-radius:10px;padding:14px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
-
-  /* ── Modal ── */
   #modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;}
-  #modal-box{background:#fff;border-radius:14px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);}
+  #modal-box{background:#fff;border-radius:14px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);}
   #modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid #e5e0d8;position:sticky;top:0;background:#fff;z-index:10;}
-  #modal-header h2{font-size:16px;font-weight:700;color:#1a1a1a;}
-  #modal-close{font-size:22px;color:#9ca3af;cursor:pointer;line-height:1;background:none;border:none;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:6px;}
+  #modal-header h2{font-size:16px;font-weight:700;}
+  #modal-close{font-size:22px;color:#9ca3af;cursor:pointer;background:none;border:none;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:6px;}
   #modal-close:hover{background:#f3f4f6;color:#374151;}
   #modal-body{padding:20px;}
-
-  /* ── Item preview no modal ── */
   .item-preview-modal{background:#f9f7f4;border:1px solid #e5e0d8;border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:center;margin-bottom:16px;}
-
-  /* ── Foto upload ── */
   .foto-upload-btn{width:100%;height:110px;border:2px dashed #d1cdc7;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#9ca3af;cursor:pointer;background:#fafaf9;transition:all .15s;}
   .foto-upload-btn:hover{border-color:#7c3aed;color:#7c3aed;}
   .foto-preview-wrap{position:relative;width:100%;height:130px;border-radius:8px;overflow:hidden;border:1px solid #e5e0d8;}
   .foto-preview-wrap img{width:100%;height:100%;object-fit:cover;}
   .foto-remove{position:absolute;top:8px;right:8px;background:#dc2626;color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
-
-  /* ── Loading overlay ── */
   #loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:300;display:flex;align-items:center;justify-content:center;}
   #loading-box{background:#fff;border-radius:14px;padding:28px 40px;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.2);}
   #loading-box p{font-size:14px;font-weight:600;color:#374151;}
-
-  /* ── Vazio ── */
   .empty{text-align:center;padding:48px 16px;color:#9ca3af;}
   .empty .empty-icon{font-size:40px;margin-bottom:10px;}
   .empty p{font-size:14px;font-weight:500;}
   .empty small{font-size:12px;margin-top:4px;display:block;}
-
-  /* ── Rel resumo ── */
   .rel-equip-card{background:#faf7ff;border:1px solid #e9d5ff;border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;}
   .rel-equip-num{font-size:26px;font-weight:800;color:#5b21b6;line-height:1;}
-
+  /* Histórico de compras */
+  .compras-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;}
+  .compras-table th{background:#f3f0ff;color:#5b21b6;font-weight:700;padding:8px 10px;text-align:left;border-bottom:2px solid #e9d5ff;}
+  .compras-table td{padding:8px 10px;border-bottom:1px solid #f0ebe0;vertical-align:middle;}
+  .compras-table tr:last-child td{border-bottom:none;}
+  .compras-table tr:hover td{background:#faf7ff;}
+  .add-compra-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;margin-top:10px;background:#f9f7f4;padding:12px;border-radius:8px;border:1px solid #e5e0d8;}
   @media(max-width:600px){
     .form-grid{grid-template-columns:1fr;}
     .form-grid .full{grid-column:1;}
     .stats-row{gap:8px;}
     .stat-card{padding:10px;}
     .stat-num{font-size:22px;}
+    .add-compra-row{grid-template-columns:1fr 1fr;grid-template-rows:auto auto;}
+    .add-compra-row .btn{grid-column:1/-1;}
   }
 </style>
 </head>
 <body>
 
-<!-- Header -->
 <div id="header">
   <div class="logo">
     <div class="logo-icon">📦</div>
@@ -176,33 +137,26 @@
   <div class="date-badge" id="date-badge"></div>
 </div>
 
-<!-- Tabs -->
 <div id="tabs">
   <button class="tab-btn active" onclick="setTab('estoque')" id="tab-estoque">📦 Estoque</button>
   <button class="tab-btn" onclick="setTab('historico')" id="tab-historico">📋 Histórico</button>
   <button class="tab-btn" onclick="setTab('equipe')" id="tab-equipe">👥 Equipe</button>
 </div>
 
-<!-- Main -->
 <div id="main"></div>
 
-<!-- Modal -->
 <div id="modal-overlay" style="display:none" onclick="if(event.target===this)fecharModal()">
   <div id="modal-box">
     <div id="modal-header">
-      <h2 id="modal-title">Modal</h2>
+      <h2 id="modal-title"></h2>
       <button id="modal-close" onclick="fecharModal()">×</button>
     </div>
     <div id="modal-body"></div>
   </div>
 </div>
 
-<!-- Loading -->
 <div id="loading-overlay" style="display:none">
-  <div id="loading-box">
-    <span style="font-size:32px">⏳</span>
-    <p>Salvando...</p>
-  </div>
+  <div id="loading-box"><span style="font-size:32px">⏳</span><p>Salvando...</p></div>
 </div>
 
 <script type="module">
@@ -226,46 +180,52 @@ const fbApp   = initializeApp(firebaseConfig);
 const db      = getFirestore(fbApp);
 const storage = getStorage(fbApp);
 
-// ── Estado ────────────────────────────────────────────────────────────────────
-let itens         = [];
-let movimentacoes = [];
-let responsaveis  = [];
-let categorias    = [];
-let tabAtual      = "estoque";
-let busca         = "";
-let filtroCategoria = "Todos";
-let fotoTemp      = null;
-
+// ── Constantes ────────────────────────────────────────────────────────────────
+const SETORES = [
+  "Blocos maquina PWR","Blocos maquina Gervasi","Tubos maquina LKR",
+  "Tubos vibrados","Tubos Maquina Tuber","Fossas","Caixas",
+  "Tampas/Leitos","Central dosadora 01","Central dosadora 02 (nova)","Pessoa/Geral"
+];
 const CATEGORIAS_PADRAO = ["EPI","Ferramenta","Consumível","Peça de Reposição","Elétrico","Hidráulico","Outros"];
-const UNIDADES   = ["un","par","cx","kg","m","L","m²","rolo"];
-const SETORES=["Blocos maquina PWR","Blocos maquina Gervasi","Tubos maquina LKR","Tubos vibrados","Tubos Maquina Tuber","Fossas","Caixas","Tampas/Leitos","Central dosadora 01","Central dosadora 02 (nova)","Pessoa/Geral"];
+const UNIDADES = ["un","par","cx","kg","m","L","m²","rolo"];
 const getCategorias = () => [...new Set([...CATEGORIAS_PADRAO, ...categorias.map(c=>c.nome)])];
+
+// ── Estado ────────────────────────────────────────────────────────────────────
+let itens=[], movimentacoes=[], responsaveis=[], categorias=[];
+let tabAtual="estoque", busca="", filtroCategoria="Todos", fotoTemp=null;
+let comprasEmEdicao=[];  // compras do item que está sendo editado no modal
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const $ = id => document.getElementById(id);
-const mes = ()=>new Date().toLocaleDateString("pt-BR",{month:"long",year:"numeric"}).replace(/^\w/,c=>c.toUpperCase());
-
-const fmtDate = ts=>{
+window.$ = $;
+const esc = s => String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const mes = () => new Date().toLocaleDateString("pt-BR",{month:"long",year:"numeric"}).replace(/^\w/,c=>c.toUpperCase());
+const fmtDate = ts => {
   if(!ts)return"—";
   const d=ts.toDate?ts.toDate():new Date(ts);
   return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"2-digit",hour:"2-digit",minute:"2-digit"});
 };
-const fmtDateShort = ts=>{
+const fmtDateShort = ts => {
   if(!ts)return"—";
   const d=ts.toDate?ts.toDate():new Date(ts);
   return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"});
 };
-
-const statusItem = item=>{
-  const q=Number(item.quantidade),m=Number(item.qtdMinima);
-  if(q===0)    return{label:"Zerado",  cls:"badge-red"};
-  if(q<=m)     return{label:"Crítico", cls:"badge-orange"};
-  if(q<=m*1.5) return{label:"Baixo",   cls:"badge-yellow"};
-  return            {label:"OK",      cls:"badge-green"};
+const fmtBRL = v => {
+  const n=Number(v);
+  return isNaN(n)?"—":"R$ "+n.toFixed(2).replace(".",",").replace(/\B(?=(\d{3})+(?!\d))/g,".");
 };
-
-const esc = s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-
+const statusItem = item => {
+  const q=Number(item.quantidade),m=Number(item.qtdMinima);
+  if(q===0)    return{label:"Zerado",  cls:"badge-red",   cor:"#dc2626"};
+  if(q<=m)     return{label:"Crítico", cls:"badge-orange", cor:"#c2410c"};
+  if(q<=m*1.5) return{label:"Baixo",   cls:"badge-yellow", cor:"#a16207"};
+  return            {label:"OK",      cls:"badge-green",  cor:"#1a1a1a"};
+};
+const precoVigente = item => {
+  if(!item.compras||!item.compras.length)return null;
+  const sorted=[...item.compras].sort((a,b)=>new Date(b.data)-new Date(a.data));
+  return sorted[0].preco;
+};
 async function compressImage(file){
   return new Promise(resolve=>{
     const img=new Image(),url=URL.createObjectURL(file);
@@ -293,19 +253,17 @@ onSnapshot(query(collection(db,"categorias"),orderBy("nome")),snap=>{
   categorias=snap.docs.map(d=>({id:d.id,...d.data()}));renderTab();
 });
 
-// ── Data badge ────────────────────────────────────────────────────────────────
 $("date-badge").textContent=mes();
 
-// ── Tab switching ─────────────────────────────────────────────────────────────
+// ── Tab ───────────────────────────────────────────────────────────────────────
 window.setTab=t=>{
   tabAtual=t;busca="";filtroCategoria="Todos";
   document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
   $("tab-"+t).classList.add("active");
   renderTab();
 };
-
 function renderTab(){
-  if(tabAtual==="estoque")   renderEstoque();
+  if(tabAtual==="estoque")        renderEstoque();
   else if(tabAtual==="historico") renderHistorico();
   else if(tabAtual==="equipe")    renderEquipe();
 }
@@ -318,71 +276,56 @@ function renderEstoque(){
     const mc=filtroCategoria==="Todos"||i.categoria===filtroCategoria;
     return mb&&mc;
   });
-
   let html=`
     <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-num">${itens.length}</div>
-        <div class="stat-label">Itens cadastrados</div>
-      </div>
-      ${criticos.length?`<div class="stat-card danger">
-        <div class="stat-num">${criticos.length}</div>
-        <div class="stat-label">Crítico${criticos.length>1?"s":""}</div>
-      </div>`:""}
-      <div class="stat-card">
-        <div class="stat-num">${movimentacoes.filter(m=>m.tipo==="saida").length}</div>
-        <div class="stat-label">Total de saídas</div>
-      </div>
+      <div class="stat-card"><div class="stat-num">${itens.length}</div><div class="stat-label">Itens cadastrados</div></div>
+      ${criticos.length?`<div class="stat-card danger"><div class="stat-num">${criticos.length}</div><div class="stat-label">Crítico${criticos.length>1?"s":""}</div></div>`:""}
+      <div class="stat-card"><div class="stat-num">${movimentacoes.filter(m=>m.tipo==="saida").length}</div><div class="stat-label">Total saídas</div></div>
     </div>
-
-    ${criticos.length?`<div class="alert-critico">
-      <p>⚠️ Estoque crítico ou zerado:</p>
-      <p>${criticos.map(i=>esc(i.nome)).join(" · ")}</p>
-    </div>`:""}
-
+    ${criticos.length?`<div class="alert-critico"><p>⚠️ Estoque crítico ou zerado:</p><p>${criticos.map(i=>esc(i.nome)).join(" · ")}</p></div>`:""}
     <div class="search-row">
       <input class="search-input" id="inp-busca" placeholder="🔍 Buscar por nome ou código..." value="${esc(busca)}"/>
       <button class="btn btn-purple" onclick="abrirModalItem()">+ Novo Item</button>
     </div>
-
     <div class="section-label">Categoria</div>
     <div class="pills">
-      ${["Todos",...getCategorias()].map(c=>`<span class="pill${filtroCategoria===c?" active":""}" onclick="setCategoria('${esc(c)}')">${c}</span>`).join("")}
+      ${["Todos",...getCategorias()].map(c=>`<span class="pill${filtroCategoria===c?" active":""}" onclick="setCategoria('${esc(c)}')">${esc(c)}</span>`).join("")}
     </div>
-
     <div class="section-label">Itens em estoque</div>
-    ${filtrados.length===0?`<div class="empty"><div class="empty-icon">📦</div><p>Nenhum item encontrado</p><small>Clique em "+ Novo Item" para cadastrar</small></div>`
-    :filtrados.map(item=>{
-      const st=statusItem(item);
-      return`<div class="item-card">
-        <div class="item-foto">${item.fotoURL?`<img src="${esc(item.fotoURL)}" alt=""/>`:"📦"}</div>
-        <div class="item-info">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
-            <div>
-              <div class="item-nome">${esc(item.nome)}</div>
-              <div class="item-meta">
-                ${item.codigo?`<span>#${esc(item.codigo)}</span>`:""}
-                <span class="badge badge-purple">${esc(item.categoria)}</span>
-                <span class="badge ${st.cls}">${st.label}</span>
-                ${item.localizacao?`<span>📍 ${esc(item.localizacao)}</span>`:""}
-                ${item.preco?`<span>💰 R$ ${Number(item.preco).toFixed(2)}</span>`:""}
+    ${filtrados.length===0
+      ?`<div class="empty"><div class="empty-icon">📦</div><p>Nenhum item encontrado</p><small>Clique em "+ Novo Item" para cadastrar</small></div>`
+      :filtrados.map(item=>{
+        const st=statusItem(item);
+        const preco=precoVigente(item);
+        return`<div class="item-card">
+          <div class="item-foto">${item.fotoURL?`<img src="${esc(item.fotoURL)}" alt=""/>`:"📦"}</div>
+          <div class="item-info">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+              <div style="min-width:0;">
+                <div class="item-nome">${esc(item.nome)}</div>
+                <div class="item-meta">
+                  ${item.codigo?`<span>#${esc(item.codigo)}</span>`:""}
+                  <span class="badge badge-purple">${esc(item.categoria)}</span>
+                  <span class="badge ${st.cls}">${st.label}</span>
+                  ${item.localizacao?`<span>📍 ${esc(item.localizacao)}</span>`:""}
+                  ${preco!==null?`<span style="color:#16a34a;font-weight:700;">💰 ${fmtBRL(preco)}</span>`:""}
+                </div>
+                ${item.observacoes?`<div style="font-size:12px;color:#9ca3af;font-style:italic;">${esc(item.observacoes)}</div>`:""}
               </div>
-              ${item.observacoes?`<div style="font-size:12px;color:#9ca3af;font-style:italic;">${esc(item.observacoes)}</div>`:""}
+              <div>
+                <div class="item-qtd" style="color:${st.cor}">${item.quantidade}</div>
+                <div class="item-qtd-label">${esc(item.unidade)}</div>
+                <div class="item-qtd-label">mín ${item.qtdMinima}</div>
+              </div>
             </div>
-            <div>
-              <div class="item-qtd" style="color:${st.label==="Zerado"?"#dc2626":st.label==="Crítico"?"#c2410c":st.label==="Baixo"?"#a16207":"#1a1a1a"}">${item.quantidade}</div>
-              <div class="item-qtd-label">${esc(item.unidade)}</div>
-              <div class="item-qtd-label">mín ${item.qtdMinima}</div>
+            <div class="item-actions">
+              <button class="btn btn-purple btn-sm" onclick="abrirModalMov('${item.id}')">📤 Movimentar</button>
+              <button class="btn btn-secondary btn-sm" onclick="abrirModalItem('${item.id}')">✏️ Editar</button>
+              <button class="btn btn-danger btn-sm" onclick="deletarItem('${item.id}')">🗑️</button>
             </div>
           </div>
-          <div class="item-actions">
-            <button class="btn btn-purple btn-sm" onclick="abrirModalMov('${item.id}')">📤 Movimentar</button>
-            <button class="btn btn-secondary btn-sm" onclick="abrirModalItem('${item.id}')">✏️ Editar</button>
-            <button class="btn btn-danger btn-sm" onclick="deletarItem('${item.id}')">🗑️</button>
-          </div>
-        </div>
-      </div>`;
-    }).join("")}
+        </div>`;
+      }).join("")}
   `;
   $("main").innerHTML=html;
   $("inp-busca").addEventListener("input",e=>{busca=e.target.value;renderEstoque();});
@@ -390,135 +333,121 @@ function renderEstoque(){
 
 // ── RENDER HISTÓRICO ──────────────────────────────────────────────────────────
 function renderHistorico(){
-  let html=`
+  $("main").innerHTML=`
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
       <div style="font-size:16px;font-weight:700;">Movimentações <span style="font-size:13px;font-weight:400;color:#6b7280;">(${movimentacoes.length})</span></div>
       <button class="btn btn-purple btn-sm" onclick="abrirModalRelatorio()">📊 Relatório</button>
     </div>
-    ${movimentacoes.length===0?`<div class="empty"><div class="empty-icon">📋</div><p>Nenhuma movimentação ainda</p></div>`
-    :movimentacoes.map(m=>`
-      <div class="mov-card">
-        <div class="mov-header">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:18px;">${m.tipo==="saida"?"📤":m.tipo==="entrada"?"📥":"🔧"}</span>
-            <span class="mov-nome">${esc(m.itemNome)}</span>
-            ${m.itemCodigo?`<span style="font-size:11px;color:#9ca3af;">#${esc(m.itemCodigo)}</span>`:""}
+    ${movimentacoes.length===0
+      ?`<div class="empty"><div class="empty-icon">📋</div><p>Nenhuma movimentação ainda</p></div>`
+      :movimentacoes.map(m=>`
+        <div class="mov-card">
+          <div class="mov-header">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:18px;">${m.tipo==="saida"?"📤":m.tipo==="entrada"?"📥":"🔧"}</span>
+              <span class="mov-nome">${esc(m.itemNome)}</span>
+              ${m.itemCodigo?`<span style="font-size:11px;color:#9ca3af;">#${esc(m.itemCodigo)}</span>`:""}
+            </div>
+            <span class="${m.tipo==="saida"?"mov-qtd-saida":"mov-qtd-entrada"}">${m.tipo==="saida"?"-":"+"}${m.quantidade} <span style="font-size:11px;font-weight:400;color:#6b7280;">${m.itemUnidade||""}</span></span>
           </div>
-          <span class="${m.tipo==="saida"?"mov-qtd-saida":"mov-qtd-entrada"}">${m.tipo==="saida"?"-":"+"}${m.quantidade} <span style="font-size:11px;font-weight:400;color:#6b7280;">${m.itemUnidade||""}</span></span>
-        </div>
-        <div class="mov-meta">
-          ${m.responsavel?`<span>🔑 <b>${esc(m.responsavel)}</b></span>`:""}
-          ${m.colaborador?`<span>👤 ${esc(m.colaborador)}</span>`:""}
-          ${m.equipamento?`<span>⚙️ ${esc(m.equipamento)}</span>`:""}
-          ${m.observacao?`<span>💬 ${esc(m.observacao)}</span>`:""}
-        </div>
-        ${m.estoqueAntes!==undefined?`<div style="font-size:11px;color:#b0a99f;margin-top:3px;">Estoque: ${m.estoqueAntes} → ${m.estoqueDepois}</div>`:""}
-        <div class="mov-date">${fmtDate(m.criadoEm)}</div>
-      </div>`).join("")}
+          <div class="mov-meta">
+            ${m.responsavel?`<span>🔑 <b>${esc(m.responsavel)}</b></span>`:""}
+            ${m.colaborador?`<span>👤 ${esc(m.colaborador)}</span>`:""}
+            ${m.setor?`<span>⚙️ ${esc(m.setor)}</span>`:""}
+            ${m.observacao?`<span>💬 ${esc(m.observacao)}</span>`:""}
+          </div>
+          ${m.estoqueAntes!==undefined?`<div style="font-size:11px;color:#b0a99f;margin-top:3px;">Estoque: ${m.estoqueAntes} → ${m.estoqueDepois}</div>`:""}
+          <div class="mov-date">${fmtDate(m.criadoEm)}</div>
+        </div>`).join("")}
   `;
-  $("main").innerHTML=html;
 }
 
 // ── RENDER EQUIPE ─────────────────────────────────────────────────────────────
 function renderEquipe(){
-  const cats = getCategorias();
-  const catsCustom = categorias; // apenas as salvas no Firebase
-
-  let html=`
-    <!-- Responsáveis -->
+  $("main").innerHTML=`
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
       <div style="font-size:16px;font-weight:700;">Responsáveis</div>
       <button class="btn btn-purple btn-sm" onclick="abrirModalResponsavel()">+ Responsável</button>
     </div>
-    ${responsaveis.length===0?`<div class="empty"><div class="empty-icon">👥</div><p>Nenhum responsável cadastrado</p></div>`
-    :responsaveis.map(r=>`
-      <div class="resp-card">
-        <div>
-          <div style="font-size:14px;font-weight:700;">${esc(r.nome)}</div>
-          ${r.cargo?`<div style="font-size:13px;color:#6b7280;">${esc(r.cargo)}</div>`:""}
-          ${r.contato?`<div style="font-size:12px;color:#9ca3af;">📞 ${esc(r.contato)}</div>`:""}
-        </div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn btn-secondary btn-sm" onclick="abrirModalResponsavel('${r.id}')">✏️</button>
-          <button class="btn btn-danger btn-sm" onclick="deletarResp('${r.id}')">🗑️</button>
-        </div>
-      </div>`).join("")}
+    ${responsaveis.length===0
+      ?`<div class="empty"><div class="empty-icon">👥</div><p>Nenhum responsável cadastrado</p></div>`
+      :responsaveis.map(r=>`
+        <div class="resp-card">
+          <div>
+            <div style="font-size:14px;font-weight:700;">${esc(r.nome)}</div>
+            ${r.cargo?`<div style="font-size:13px;color:#6b7280;">${esc(r.cargo)}</div>`:""}
+            ${r.contato?`<div style="font-size:12px;color:#9ca3af;">📞 ${esc(r.contato)}</div>`:""}
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm" onclick="abrirModalResponsavel('${r.id}')">✏️</button>
+            <button class="btn btn-danger btn-sm" onclick="deletarResp('${r.id}')">🗑️</button>
+          </div>
+        </div>`).join("")}
 
-    <!-- Categorias -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin:28px 0 16px;">
       <div style="font-size:16px;font-weight:700;">Categorias</div>
     </div>
-
-    <!-- Padrão -->
-    <div class="section-label" style="margin-bottom:8px;">Categorias padrão (fixas)</div>
+    <div class="section-label">Padrão (fixas)</div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;">
-      ${["EPI","Ferramenta","Consumível","Peça de Reposição","Elétrico","Hidráulico","Outros"].map(c=>`
-        <span class="badge badge-purple" style="font-size:13px;padding:5px 12px;">${esc(c)}</span>
-      `).join("")}
+      ${CATEGORIAS_PADRAO.map(c=>`<span class="badge badge-purple" style="font-size:13px;padding:5px 12px;">${esc(c)}</span>`).join("")}
     </div>
-
-    <!-- Customizadas -->
-    <div class="section-label" style="margin-bottom:8px;">Categorias personalizadas</div>
-    ${catsCustom.length===0?`<div style="color:#9ca3af;font-size:13px;margin-bottom:16px;">Nenhuma categoria personalizada ainda.</div>`
-    :`<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
-        ${catsCustom.map(c=>`
-          <div style="display:flex;align-items:center;gap:6px;background:#faf7ff;border:1.5px solid #e9d5ff;border-radius:999px;padding:5px 10px 5px 14px;">
-            <span style="font-size:13px;font-weight:600;color:#5b21b6;">${esc(c.nome)}</span>
-            <button onclick="deletarCategoria('${c.id}')" style="background:#dc2626;color:#fff;border:none;border-radius:50%;width:18px;height:18px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">×</button>
-          </div>
-        `).join("")}
-      </div>`}
-
-    <!-- Adicionar nova -->
+    <div class="section-label">Personalizadas</div>
+    ${categorias.length===0
+      ?`<div style="color:#9ca3af;font-size:13px;margin-bottom:16px;">Nenhuma categoria personalizada ainda.</div>`
+      :`<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+          ${categorias.map(c=>`
+            <div style="display:flex;align-items:center;gap:6px;background:#faf7ff;border:1.5px solid #e9d5ff;border-radius:999px;padding:5px 10px 5px 14px;">
+              <span style="font-size:13px;font-weight:600;color:#5b21b6;">${esc(c.nome)}</span>
+              <button onclick="deletarCategoria('${c.id}')" style="background:#dc2626;color:#fff;border:none;border-radius:50%;width:18px;height:18px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;">×</button>
+            </div>`).join("")}
+        </div>`}
     <div style="display:flex;gap:10px;">
-      <input id="inp-nova-cat" placeholder="ex: Lubrificante, Abrasivo, Fixação..." 
-        class="search-input" style="flex:1"
-        onkeydown="if(event.key==='Enter')adicionarCategoria()"/>
+      <input id="inp-nova-cat" placeholder="ex: Lubrificante, Abrasivo, Fixação..."
+        class="search-input" style="flex:1" onkeydown="if(event.key==='Enter')adicionarCategoria()"/>
       <button class="btn btn-purple" onclick="adicionarCategoria()">+ Adicionar</button>
     </div>
   `;
-  $("main").innerHTML=html;
 }
 
-// ── MODAL helpers ─────────────────────────────────────────────────────────────
+// ── Modal helpers ─────────────────────────────────────────────────────────────
 function abrirModal(titulo,html){
   $("modal-title").textContent=titulo;
   $("modal-body").innerHTML=html;
   $("modal-overlay").style.display="flex";
 }
-window.fecharModal=()=>{
-  $("modal-overlay").style.display="none";
-  fotoTemp=null;
-};
+window.fecharModal=()=>{$("modal-overlay").style.display="none";fotoTemp=null;comprasEmEdicao=[];};
 function setSalvando(v){$("loading-overlay").style.display=v?"flex":"none";}
 
-// ── MODAL ITEM ────────────────────────────────────────────────────────────────
-let comprasEmEdicao=[];
-window.addCompraItem=(id)=>{
-  const data=$("c-data")?.value, preco=Number($("c-preco")?.value)||0;
-  if(!data||preco<=0){alert("Informe data e preço da compra");return;}
-  comprasEmEdicao.push({data,preco,forn:$("c-forn")?.value?.trim()||""});
-  // re-renderiza a lista de compras dentro do modal sem fechar
-  const box=$("compras-lista");
-  const ordenadas=[...comprasEmEdicao].sort((a,b)=>(b.data||"").localeCompare(a.data||""));
-  if(box) box.innerHTML=ordenadas.map(c=>`<div style="display:flex;justify-content:space-between;padding:3px 0;border-top:1px solid #ececec;"><span>${c.data||"?"}${c.forn?` · ${c.forn}`:""}</span><b>R$ ${Number(c.preco).toFixed(2)}</b></div>`).join("");
-  // atualiza o "preço vigente"
-  const vig=$("compras-box")?.querySelector("div");
-  if(vig) vig.innerHTML=`Preço vigente (última compra): <b style="color:#4c1d95;">R$ ${Number(ordenadas[0].preco).toFixed(2)}</b>`;
-  $("c-data").value="";$("c-preco").value="";$("c-forn").value="";
-};
+// ── MODAL ITEM (com histórico de compras) ─────────────────────────────────────
 window.abrirModalItem=id=>{
   const item=id?itens.find(i=>i.id===id):{};
-  comprasEmEdicao=item.compras?JSON.parse(JSON.stringify(item.compras)):[];
-  const titulo=id?"Editar Item":"Novo Item";
-  abrirModal(titulo,`
+  comprasEmEdicao=item.compras?[...item.compras]:[];
+
+  const renderComprasTable=()=>{
+    const sorted=[...comprasEmEdicao].sort((a,b)=>new Date(b.data)-new Date(a.data));
+    return sorted.length===0
+      ?`<div style="color:#b0a99f;font-size:13px;padding:8px 0;">Nenhuma compra cadastrada ainda.</div>`
+      :`<table class="compras-table">
+          <thead><tr><th>Data</th><th>Preço Unit.</th><th>Fornecedor</th><th></th></tr></thead>
+          <tbody>
+            ${sorted.map((c,i)=>`<tr>
+              <td>${c.data||"—"}</td>
+              <td style="font-weight:700;color:#16a34a;">${fmtBRL(c.preco)}</td>
+              <td style="color:#6b7280;">${esc(c.fornecedor||"—")}</td>
+              <td><button onclick="removerCompra(${comprasEmEdicao.indexOf(c)})" style="background:#fee2e2;color:#dc2626;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;font-size:11px;">✕</button></td>
+            </tr>`).join("")}
+          </tbody>
+        </table>`;
+  };
+
+  abrirModal(id?"Editar Item":"Novo Item",`
     <div class="form-grid">
       <div class="full form-group">
         <label>Foto do Item</label>
         <div id="foto-wrap">
           ${item.fotoURL
             ?`<div class="foto-preview-wrap"><img src="${esc(item.fotoURL)}"/><button class="foto-remove" onclick="removerFoto()">×</button></div>`
-            :`<div class="foto-upload-btn" onclick="$('inp-foto').click()"><span style="font-size:28px;">📷</span><span style="font-size:13px;font-weight:500;">Tirar foto ou escolher arquivo</span></div>`}
+            :`<div class="foto-upload-btn" onclick="document.getElementById('inp-foto').click()"><span style="font-size:28px;">📷</span><span style="font-size:13px;font-weight:500;">Tirar foto ou escolher arquivo</span></div>`}
         </div>
         <input id="inp-foto" type="file" accept="image/*" capture="environment" style="display:none" onchange="handleFoto(this)"/>
       </div>
@@ -532,7 +461,7 @@ window.abrirModalItem=id=>{
       </div>
       <div class="form-group">
         <label>Categoria</label>
-        <select id="f-categoria">${getCategorias().map(c=>`<option${item.categoria===c?" selected":""}>${c}</option>`).join("")}</select>
+        <select id="f-categoria">${getCategorias().map(c=>`<option${item.categoria===c?" selected":""}>${esc(c)}</option>`).join("")}</select>
       </div>
       <div class="form-group">
         <label>Localização</label>
@@ -551,34 +480,85 @@ window.abrirModalItem=id=>{
         <input id="f-qtdmin" type="number" value="${item.qtdMinima||0}" min="0"/>
       </div>
       <div class="full form-group">
-        <label>Histórico de compras</label>
-        <div id="compras-box" style="background:#f7f5f0;border:1px solid #e0dcd2;border-radius:8px;padding:10px;">
-          ${(item.compras&&item.compras.length)
-            ? `<div style="font-size:12px;color:#6b7280;margin-bottom:6px;">Preço vigente (última compra): <b style="color:#4c1d95;">R$ ${Number([...item.compras].sort((a,b)=>(b.data||"").localeCompare(a.data||""))[0].preco).toFixed(2)}</b></div>`
-            : `<div style="font-size:12px;color:#9ca3af;margin-bottom:6px;">Nenhuma compra cadastrada ainda.</div>`}
-          <div id="compras-lista" style="font-size:12px;">
-            ${(item.compras||[]).slice().sort((a,b)=>(b.data||"").localeCompare(a.data||"")).map(c=>`<div style="display:flex;justify-content:space-between;padding:3px 0;border-top:1px solid #ececec;"><span>${c.data||"?"}${c.forn?` · ${esc(c.forn)}`:""}</span><b>R$ ${Number(c.preco).toFixed(2)}</b></div>`).join("")}
-          </div>
-          <div style="display:flex;gap:6px;margin-top:8px;align-items:end;flex-wrap:wrap;">
-            <div style="flex:1;min-width:90px;"><label style="font-size:11px;">Data</label><input id="c-data" type="date" style="width:100%;padding:5px;"/></div>
-            <div style="flex:1;min-width:80px;"><label style="font-size:11px;">Preço R$</label><input id="c-preco" type="number" step="0.01" min="0" placeholder="8.50" style="width:100%;padding:5px;"/></div>
-            <div style="flex:1;min-width:90px;"><label style="font-size:11px;">Fornecedor</label><input id="c-forn" placeholder="opcional" style="width:100%;padding:5px;"/></div>
-            <button type="button" class="btn btn-secondary" style="padding:6px 12px;" onclick="addCompraItem('${id||""}')">+ Add</button>
-          </div>
-        </div>
-      </div>
-      <div class="full form-group">
         <label>Observações</label>
-        <textarea id="f-obs" placeholder="Fornecedor, marca, etc.">${esc(item.observacoes||"")}</textarea>
+        <textarea id="f-obs" placeholder="Fornecedor habitual, marca, etc.">${esc(item.observacoes||"")}</textarea>
+      </div>
+
+      <!-- Histórico de compras -->
+      <div class="full">
+        <div style="font-size:13px;font-weight:700;color:#5b21b6;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid #e9d5ff;">💰 Histórico de Compras</div>
+        <div id="compras-lista">${renderComprasTable()}</div>
+        <div class="add-compra-row">
+          <div class="form-group">
+            <label>Data</label>
+            <input id="c-data" type="date" value="${new Date().toISOString().slice(0,10)}"/>
+          </div>
+          <div class="form-group">
+            <label>Preço Unit. R$</label>
+            <input id="c-preco" type="number" step="0.01" min="0" placeholder="0,00"/>
+          </div>
+          <div class="form-group">
+            <label>Fornecedor</label>
+            <input id="c-forn" placeholder="opcional"/>
+          </div>
+          <button class="btn btn-purple btn-sm" onclick="addCompraItem()">+ Add</button>
+        </div>
       </div>
     </div>
     <div style="display:flex;gap:10px;margin-top:16px;">
       <button class="btn btn-secondary" style="flex:1" onclick="fecharModal()">Cancelar</button>
-      <button class="btn btn-primary" style="flex:2" onclick="submitItem('${id||""}','${esc(item.fotoURL||"")}','${esc(item.fotoPath||"")}')">+ ${id?"Salvar Alterações":"Cadastrar item"}</button>
+      <button class="btn btn-primary" style="flex:2" onclick="submitItem('${id||""}','${esc(item.fotoURL||"")}','${esc(item.fotoPath||"")}')">
+        ${id?"Salvar Alterações":"+ Cadastrar Item"}
+      </button>
     </div>
   `);
 };
 
+// Gerencia compras em edição
+window.addCompraItem=()=>{
+  const data=$("c-data")?.value;
+  const preco=parseFloat($("c-preco")?.value);
+  const forn=$("c-forn")?.value?.trim()||"";
+  if(!data||isNaN(preco)||preco<=0){alert("Informe data e preço válidos.");return;}
+  comprasEmEdicao.push({data,preco,fornecedor:forn});
+  // Re-render apenas a tabela
+  const lista=$("compras-lista");
+  if(lista){
+    const sorted=[...comprasEmEdicao].sort((a,b)=>new Date(b.data)-new Date(a.data));
+    lista.innerHTML=`<table class="compras-table">
+      <thead><tr><th>Data</th><th>Preço Unit.</th><th>Fornecedor</th><th></th></tr></thead>
+      <tbody>
+        ${sorted.map(c=>`<tr>
+          <td>${c.data||"—"}</td>
+          <td style="font-weight:700;color:#16a34a;">${fmtBRL(c.preco)}</td>
+          <td style="color:#6b7280;">${esc(c.fornecedor||"—")}</td>
+          <td><button onclick="removerCompra(${comprasEmEdicao.indexOf(c)})" style="background:#fee2e2;color:#dc2626;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;font-size:11px;">✕</button></td>
+        </tr>`).join("")}
+      </tbody></table>`;
+  }
+  if($("c-preco"))$("c-preco").value="";
+  if($("c-forn"))$("c-forn").value="";
+};
+
+window.removerCompra=idx=>{
+  comprasEmEdicao.splice(idx,1);
+  const lista=$("compras-lista");
+  if(!lista)return;
+  if(comprasEmEdicao.length===0){lista.innerHTML=`<div style="color:#b0a99f;font-size:13px;padding:8px 0;">Nenhuma compra cadastrada ainda.</div>`;return;}
+  const sorted=[...comprasEmEdicao].sort((a,b)=>new Date(b.data)-new Date(a.data));
+  lista.innerHTML=`<table class="compras-table">
+    <thead><tr><th>Data</th><th>Preço Unit.</th><th>Fornecedor</th><th></th></tr></thead>
+    <tbody>
+      ${sorted.map(c=>`<tr>
+        <td>${c.data||"—"}</td>
+        <td style="font-weight:700;color:#16a34a;">${fmtBRL(c.preco)}</td>
+        <td style="color:#6b7280;">${esc(c.fornecedor||"—")}</td>
+        <td><button onclick="removerCompra(${comprasEmEdicao.indexOf(c)})" style="background:#fee2e2;color:#dc2626;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;font-size:11px;">✕</button></td>
+      </tr>`).join("")}
+    </tbody></table>`;
+};
+
+// Foto
 window.handleFoto=async input=>{
   const file=input.files[0];if(!file)return;
   $("foto-wrap").innerHTML=`<div class="foto-upload-btn" style="cursor:default;border-color:#7c3aed;color:#7c3aed;"><span style="font-size:24px;">⏳</span><span style="font-size:13px;">Enviando...</span></div>`;
@@ -589,13 +569,15 @@ window.handleFoto=async input=>{
     const url=await getDownloadURL(ref(storage,path));
     fotoTemp={url,path};
     $("foto-wrap").innerHTML=`<div class="foto-preview-wrap"><img src="${url}"/><button class="foto-remove" onclick="removerFoto()">×</button></div>`;
-  }catch(e){alert("Erro ao enviar foto: "+e.message);$("foto-wrap").innerHTML=`<div class="foto-upload-btn" onclick="$('inp-foto').click()"><span style="font-size:28px;">📷</span><span style="font-size:13px;font-weight:500;">Tirar foto ou escolher arquivo</span></div>`;}
+  }catch(e){
+    alert("Erro ao enviar foto: "+e.message);
+    $("foto-wrap").innerHTML=`<div class="foto-upload-btn" onclick="document.getElementById('inp-foto').click()"><span style="font-size:28px;">📷</span><span style="font-size:13px;font-weight:500;">Tirar foto ou escolher arquivo</span></div>`;
+  }
 };
-
 window.removerFoto=async()=>{
   if(fotoTemp?.path)try{await deleteObject(ref(storage,fotoTemp.path));}catch{}
   fotoTemp=null;
-  $("foto-wrap").innerHTML=`<div class="foto-upload-btn" onclick="$('inp-foto').click()"><span style="font-size:28px;">📷</span><span style="font-size:13px;font-weight:500;">Tirar foto ou escolher arquivo</span></div>`;
+  $("foto-wrap").innerHTML=`<div class="foto-upload-btn" onclick="document.getElementById('inp-foto').click()"><span style="font-size:28px;">📷</span><span style="font-size:13px;font-weight:500;">Tirar foto ou escolher arquivo</span></div>`;
 };
 
 window.submitItem=async(id,existURL,existPath)=>{
@@ -603,18 +585,21 @@ window.submitItem=async(id,existURL,existPath)=>{
   if(!nome){alert("Informe o nome do item");return;}
   setSalvando(true);
   const data={
-    nome,codigo:$("f-codigo").value.trim(),categoria:$("f-categoria").value,
-    localizacao:$("f-local").value.trim(),quantidade:Number($("f-qtd").value),
-    qtdMinima:Number($("f-qtdmin").value),unidade:$("f-unidade").value,
-    compras:comprasEmEdicao,
-    preco:(comprasEmEdicao.length?Number([...comprasEmEdicao].sort((a,b)=>(b.data||"").localeCompare(a.data||""))[0].preco)||0:0),
+    nome, codigo:$("f-codigo").value.trim(),
+    categoria:$("f-categoria").value,
+    localizacao:$("f-local").value.trim(),
+    quantidade:Number($("f-qtd").value),
+    qtdMinima:Number($("f-qtdmin").value),
+    unidade:$("f-unidade").value,
     observacoes:$("f-obs").value.trim(),
-    fotoURL:fotoTemp?.url||existURL||"",fotoPath:fotoTemp?.path||existPath||""
+    fotoURL:fotoTemp?.url||existURL||"",
+    fotoPath:fotoTemp?.path||existPath||"",
+    compras:comprasEmEdicao
   };
   try{
     if(id)await updateDoc(doc(db,"itens",id),data);
     else  await addDoc(collection(db,"itens"),{...data,criadoEm:serverTimestamp()});
-    fotoTemp=null;fecharModal();
+    fotoTemp=null;comprasEmEdicao=[];fecharModal();
   }catch(e){alert("Erro: "+e.message);}
   setSalvando(false);
 };
@@ -625,12 +610,12 @@ window.deletarItem=async id=>{
   if(item.fotoPath)try{await deleteObject(ref(storage,item.fotoPath));}catch{}
   await deleteDoc(doc(db,"itens",id));
 };
-
 window.setCategoria=c=>{filtroCategoria=c;renderEstoque();};
 
-// ── MODAL MOVIMENTAÇÃO ────────────────────────────────────────────────────────
+// ── MODAL MOVIMENTAÇÃO (setor fixo) ───────────────────────────────────────────
 window.abrirModalMov=id=>{
   const item=itens.find(i=>i.id===id);
+  const preco=precoVigente(item);
   abrirModal("Registrar Movimentação",`
     <div class="item-preview-modal">
       <div style="width:50px;height:50px;border-radius:8px;overflow:hidden;flex-shrink:0;background:#f0ebe0;display:flex;align-items:center;justify-content:center;font-size:22px;">
@@ -639,7 +624,10 @@ window.abrirModalMov=id=>{
       <div>
         <div style="font-size:11px;color:#5b21b6;font-weight:600;">${esc(item.categoria)}</div>
         <div style="font-size:15px;font-weight:700;">${esc(item.nome)}</div>
-        <div style="font-size:13px;color:#6b7280;">Estoque atual: <b style="color:#1a1a1a;">${item.quantidade} ${esc(item.unidade)}</b></div>
+        <div style="font-size:13px;color:#6b7280;">
+          Estoque: <b style="color:#1a1a1a;">${item.quantidade} ${esc(item.unidade)}</b>
+          ${preco!==null?` · <b style="color:#16a34a;">💰 ${fmtBRL(preco)}</b>`:""}
+        </div>
       </div>
     </div>
     <div class="form-grid">
@@ -648,7 +636,7 @@ window.abrirModalMov=id=>{
         <select id="m-tipo">
           <option value="saida">📤 Saída</option>
           <option value="entrada">📥 Entrada</option>
-          <option value="ajuste">🔧 Ajuste de Inventário</option>
+          <option value="ajuste">🔧 Ajuste</option>
         </select>
       </div>
       <div class="form-group">
@@ -656,7 +644,7 @@ window.abrirModalMov=id=>{
         <input id="m-qtd" type="number" value="1" min="1"/>
       </div>
       <div class="full form-group">
-        <label>Responsável pela Liberação *</label>
+        <label>Responsável *</label>
         <select id="m-resp">
           <option value="">— Selecione —</option>
           ${responsaveis.map(r=>`<option value="${esc(r.nome)}">${esc(r.nome)}${r.cargo?" · "+esc(r.cargo):""}</option>`).join("")}
@@ -667,8 +655,11 @@ window.abrirModalMov=id=>{
         <input id="m-colab" placeholder="Nome do colaborador"/>
       </div>
       <div class="full form-group">
-        <label>Equipamento / Setor *</label>
-        <select id="m-equip"><option value="">Selecione...</option>${SETORES.map(s=>`<option>${s}</option>`).join("")}</select>
+        <label>Setor / Destino *</label>
+        <select id="m-setor">
+          <option value="">— Selecione o setor —</option>
+          ${SETORES.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("")}
+        </select>
       </div>
       <div class="full form-group">
         <label>Observação</label>
@@ -686,10 +677,10 @@ window.submitMov=async itemId=>{
   const tipo=$("m-tipo")?.value;
   const resp=$("m-resp")?.value;
   const colab=$("m-colab")?.value?.trim();
-  const equip=$("m-equip")?.value?.trim();
+  const setor=$("m-setor")?.value;
   if(!resp){alert("Selecione o responsável");return;}
   if(tipo==="saida"&&!colab){alert("Informe o colaborador");return;}
-  if(tipo==="saida"&&!equip){alert("Informe o equipamento / destino");return;}
+  if(tipo==="saida"&&!setor){alert("Selecione o setor / destino");return;}
   setSalvando(true);
   const item=itens.find(i=>i.id===itemId);
   const qtd=Number($("m-qtd").value);
@@ -697,13 +688,17 @@ window.submitMov=async itemId=>{
   if(tipo==="saida")novaQtd-=qtd;
   else if(tipo==="entrada")novaQtd+=qtd;
   else novaQtd=qtd;
-  if(novaQtd<0){setSalvando(false);alert("Quantidade insuficiente em estoque!");return;}
+  if(novaQtd<0){setSalvando(false);alert("Quantidade insuficiente!");return;}
+  const preco=precoVigente(item);
   try{
     await updateDoc(doc(db,"itens",itemId),{quantidade:novaQtd});
     await addDoc(collection(db,"movimentacoes"),{
-      tipo,quantidade:qtd,responsavel:resp,colaborador:colab,equipamento:equip,
+      tipo,quantidade:qtd,responsavel:resp,colaborador:colab,
+      setor, // campo padronizado para o Motor de Custos
       observacao:$("m-obs")?.value?.trim()||"",
       itemId,itemNome:item.nome,itemCodigo:item.codigo||"",itemUnidade:item.unidade||"un",
+      precoUnitario:preco,
+      valorTotal:preco!==null?preco*qtd:null,
       estoqueAntes:Number(item.quantidade),estoqueDepois:novaQtd,
       criadoEm:serverTimestamp()
     });
@@ -719,24 +714,23 @@ window.abrirModalResponsavel=id=>{
     <div class="form-grid">
       <div class="full form-group">
         <label>Nome Completo *</label>
-        <input id="r-nome" value="${esc(r.nome||"")}" placeholder="Nome do responsável"/>
+        <input id="r-nome" value="${esc(r.nome||"")}" placeholder="Nome"/>
       </div>
       <div class="form-group">
         <label>Cargo</label>
-        <input id="r-cargo" value="${esc(r.cargo||"")}" placeholder="ex: Supervisor de Produção"/>
+        <input id="r-cargo" value="${esc(r.cargo||"")}" placeholder="ex: Supervisor"/>
       </div>
       <div class="form-group">
         <label>Contato / Ramal</label>
-        <input id="r-contato" value="${esc(r.contato||"")}" placeholder="ex: (54) 99999-9999"/>
+        <input id="r-contato" value="${esc(r.contato||"")}" placeholder="(54) 9 9999-9999"/>
       </div>
     </div>
     <div style="display:flex;gap:10px;margin-top:16px;">
       <button class="btn btn-secondary" style="flex:1" onclick="fecharModal()">Cancelar</button>
-      <button class="btn btn-primary" style="flex:2" onclick="submitResp('${id||""}')">${id?"Salvar Alterações":"+ Cadastrar"}</button>
+      <button class="btn btn-primary" style="flex:2" onclick="submitResp('${id||""}')">${id?"Salvar":"+ Cadastrar"}</button>
     </div>
   `);
 };
-
 window.submitResp=async id=>{
   const nome=$("r-nome")?.value?.trim();
   if(!nome){alert("Informe o nome");return;}
@@ -749,7 +743,6 @@ window.submitResp=async id=>{
   }catch(e){alert("Erro: "+e.message);}
   setSalvando(false);
 };
-
 window.deletarResp=async id=>{
   if(!confirm("Excluir responsável?"))return;
   await deleteDoc(doc(db,"responsaveis",id));
@@ -760,14 +753,10 @@ window.adicionarCategoria=async()=>{
   const inp=$("inp-nova-cat");
   const nome=inp?.value?.trim();
   if(!nome){alert("Digite o nome da categoria");return;}
-  const todas=getCategorias();
-  if(todas.map(c=>c.toLowerCase()).includes(nome.toLowerCase())){alert("Essa categoria já existe!");return;}
-  try{
-    await addDoc(collection(db,"categorias"),{nome,criadoEm:serverTimestamp()});
-    inp.value="";
-  }catch(e){alert("Erro: "+e.message);}
+  if(getCategorias().map(c=>c.toLowerCase()).includes(nome.toLowerCase())){alert("Essa categoria já existe!");return;}
+  try{await addDoc(collection(db,"categorias"),{nome,criadoEm:serverTimestamp()});inp.value="";}
+  catch(e){alert("Erro: "+e.message);}
 };
-
 window.deletarCategoria=async id=>{
   if(!confirm("Excluir esta categoria?"))return;
   await deleteDoc(doc(db,"categorias",id));
@@ -775,30 +764,25 @@ window.deletarCategoria=async id=>{
 
 // ── MODAL RELATÓRIO ───────────────────────────────────────────────────────────
 window.abrirModalRelatorio=()=>{
-  const saidas=movimentacoes.filter(m=>m.tipo==="saida"&&m.equipamento);
-  const equipamentos=["Todos",...new Set(saidas.map(m=>m.equipamento))].sort();
-  const agrupado=saidas.reduce((acc,m)=>{if(!acc[m.equipamento])acc[m.equipamento]=[];acc[m.equipamento].push(m);return acc;},{});
-  const resumo=Object.entries(agrupado).map(([eq,movs])=>({
-    equipamento:eq,totalMovimentacoes:movs.length,
-    itensDiferentes:new Set(movs.map(m=>m.itemId)).size,
+  const saidas=movimentacoes.filter(m=>m.tipo==="saida"&&m.setor);
+  const setoresUsados=["Todos",...new Set(saidas.map(m=>m.setor))].sort();
+  const agrupado=saidas.reduce((acc,m)=>{if(!acc[m.setor])acc[m.setor]=[];acc[m.setor].push(m);return acc;},{});
+  const resumo=Object.entries(agrupado).map(([s,movs])=>({
+    setor:s, total:movs.length,
+    itensDif:new Set(movs.map(m=>m.itemId)).size,
+    valorTotal:movs.reduce((sum,m)=>sum+(m.valorTotal||0),0),
     colaboradores:[...new Set(movs.map(m=>m.colaborador).filter(Boolean))],
     ultima:movs[0]?.criadoEm
-  })).sort((a,b)=>b.totalMovimentacoes-a.totalMovimentacoes);
+  })).sort((a,b)=>b.total-a.total);
 
-  abrirModal("📊 Relatório de Saídas por Equipamento",`
+  abrirModal("📊 Relatório de Saídas por Setor",`
     <div class="form-grid">
       <div class="full form-group">
-        <label>Equipamento</label>
-        <select id="rel-equip">${equipamentos.map(e=>`<option>${esc(e)}</option>`).join("")}</select>
+        <label>Setor</label>
+        <select id="rel-setor">${setoresUsados.map(s=>`<option>${esc(s)}</option>`).join("")}</select>
       </div>
-      <div class="form-group">
-        <label>Data Início</label>
-        <input id="rel-inicio" type="date"/>
-      </div>
-      <div class="form-group">
-        <label>Data Fim</label>
-        <input id="rel-fim" type="date"/>
-      </div>
+      <div class="form-group"><label>Data Início</label><input id="rel-inicio" type="date"/></div>
+      <div class="form-group"><label>Data Fim</label><input id="rel-fim" type="date"/></div>
     </div>
     <div style="display:flex;gap:10px;margin-top:16px;">
       <button class="btn btn-red" style="flex:1" onclick="gerarPDF()">📄 PDF</button>
@@ -806,15 +790,16 @@ window.abrirModalRelatorio=()=>{
     </div>
     ${resumo.length?`
       <div style="margin-top:20px;">
-        <div class="section-label">Resumo geral por equipamento</div>
+        <div class="section-label">Resumo geral por setor</div>
         ${resumo.map(r=>`<div class="rel-equip-card">
           <div>
-            <div style="font-size:14px;font-weight:700;">⚙️ ${esc(r.equipamento)}</div>
-            <div style="font-size:12px;color:#6b7280;margin-top:3px;">${r.itensDiferentes} tipo(s) de item · última saída ${fmtDateShort(r.ultima)}</div>
+            <div style="font-size:14px;font-weight:700;">⚙️ ${esc(r.setor)}</div>
+            <div style="font-size:12px;color:#6b7280;margin-top:2px;">${r.itensDif} tipo(s) · última ${fmtDateShort(r.ultima)}</div>
             ${r.colaboradores.length?`<div style="font-size:12px;color:#9ca3af;">👤 ${r.colaboradores.map(esc).join(", ")}</div>`:""}
+            ${r.valorTotal>0?`<div style="font-size:12px;font-weight:700;color:#16a34a;margin-top:2px;">Total: ${fmtBRL(r.valorTotal)}</div>`:""}
           </div>
           <div style="text-align:right;">
-            <div class="rel-equip-num">${r.totalMovimentacoes}</div>
+            <div class="rel-equip-num">${r.total}</div>
             <div style="font-size:11px;color:#6b7280;">saídas</div>
           </div>
         </div>`).join("")}
@@ -824,11 +809,11 @@ window.abrirModalRelatorio=()=>{
 };
 
 function getFiltradas(){
-  const eq=$("rel-equip")?.value||"Todos";
+  const s=$("rel-setor")?.value||"Todos";
   const di=$("rel-inicio")?.value||"";
   const df=$("rel-fim")?.value||"";
-  return movimentacoes.filter(m=>m.tipo==="saida"&&m.equipamento).filter(m=>{
-    if(eq!=="Todos"&&m.equipamento!==eq)return false;
+  return movimentacoes.filter(m=>m.tipo==="saida").filter(m=>{
+    if(s!=="Todos"&&m.setor!==s)return false;
     if(di||df){
       const d=m.criadoEm?.toDate?m.criadoEm.toDate():new Date(m.criadoEm);
       if(di&&d<new Date(di))return false;
@@ -842,9 +827,15 @@ window.gerarCSV=()=>{
   const filtradas=getFiltradas();
   if(!filtradas.length){alert("Nenhum dado para exportar.");return;}
   const rows=[
-    ["Data/Hora","Equipamento","Item","Código","Qtd","Unid","Colaborador","Responsável","Est.Antes","Est.Depois","Obs"],
-    ...filtradas.map(m=>[fmtDate(m.criadoEm),m.equipamento,m.itemNome,m.itemCodigo||"",m.quantidade,
-      m.itemUnidade||"",m.colaborador||"",m.responsavel||"",m.estoqueAntes??"",m.estoqueDepois??"",m.observacao||""])
+    ["Data/Hora","Setor","Item","Código","Qtd","Unid","Preço Unit.","Valor Total","Colaborador","Responsável","Est.Antes","Est.Depois","Obs"],
+    ...filtradas.map(m=>[
+      fmtDate(m.criadoEm),m.setor||"",m.itemNome,m.itemCodigo||"",
+      m.quantidade,m.itemUnidade||"",
+      m.precoUnitario!=null?m.precoUnitario:"",
+      m.valorTotal!=null?m.valorTotal:"",
+      m.colaborador||"",m.responsavel||"",
+      m.estoqueAntes??"",m.estoqueDepois??"",m.observacao||""
+    ])
   ];
   const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");
   const a=document.createElement("a");
@@ -855,17 +846,11 @@ window.gerarCSV=()=>{
 window.gerarPDF=async()=>{
   const filtradas=getFiltradas();
   if(!filtradas.length){alert("Nenhum dado para exportar.");return;}
-  const eq=$("rel-equip")?.value||"Todos";
+  const setor=$("rel-setor")?.value||"Todos";
   const di=$("rel-inicio")?.value||"";
   const df=$("rel-fim")?.value||"";
-  await new Promise(res=>{
-    if(window.jspdf){res();return;}
-    const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";s.onload=res;document.head.appendChild(s);
-  });
-  await new Promise(res=>{
-    if(window.jspdfAutoTable){res();return;}
-    const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";s.onload=res;document.head.appendChild(s);
-  });
+  await new Promise(res=>{if(window.jspdf){res();return;}const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";s.onload=res;document.head.appendChild(s);});
+  await new Promise(res=>{if(window.jspdfAutoTable){res();return;}const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";s.onload=res;document.head.appendChild(s);});
   const {jsPDF}=window.jspdf;
   const pdf=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
   const W=pdf.internal.pageSize.getWidth();
@@ -878,39 +863,60 @@ window.gerarPDF=async()=>{
     pdf.text(titulo,14,13);pdf.text(`Gerado: ${now}`,W-14,13,{align:"right"});
     pdf.setTextColor(30,30,30);
   };
-  addHeader("Relatório de Saídas por Equipamento");
+  addHeader("Relatório de Saídas por Setor");
   const periodo=di||df?`${di?new Date(di).toLocaleDateString("pt-BR"):"início"} até ${df?new Date(df).toLocaleDateString("pt-BR"):"hoje"}`:"Todo o período";
   pdf.setFontSize(9);pdf.setTextColor(80,80,80);
-  pdf.text(`Equipamento: ${eq}   |   Período: ${periodo}   |   Registros: ${filtradas.length}`,14,26);
-  const agrupado=filtradas.reduce((acc,m)=>{if(!acc[m.equipamento])acc[m.equipamento]=[];acc[m.equipamento].push(m);return acc;},{});
-  const resumo=Object.entries(agrupado).map(([eq2,movs])=>({equipamento:eq2,totalMovimentacoes:movs.length,itensDiferentes:new Set(movs.map(m=>m.itemId)).size,colaboradores:[...new Set(movs.map(m=>m.colaborador).filter(Boolean))],ultima:movs[0]?.criadoEm})).sort((a,b)=>b.totalMovimentacoes-a.totalMovimentacoes);
+  pdf.text(`Setor: ${setor}   |   Período: ${periodo}   |   Registros: ${filtradas.length}`,14,26);
+
+  const agrupado=filtradas.reduce((acc,m)=>{const k=m.setor||"Sem setor";if(!acc[k])acc[k]=[];acc[k].push(m);return acc;},{});
+  const resumo=Object.entries(agrupado).map(([s,movs])=>({
+    setor:s,total:movs.length,itensDif:new Set(movs.map(m=>m.itemId)).size,
+    valorTotal:movs.reduce((sum,m)=>sum+(m.valorTotal||0),0),
+    colaboradores:[...new Set(movs.map(m=>m.colaborador).filter(Boolean))],
+    ultima:movs[0]?.criadoEm
+  })).sort((a,b)=>b.total-a.total);
+
   if(resumo.length){
     pdf.setFontSize(10);pdf.setFont("helvetica","bold");pdf.setTextColor(91,33,182);
-    pdf.text("RESUMO POR EQUIPAMENTO",14,34);pdf.setTextColor(30,30,30);
-    pdf.autoTable({startY:37,head:[["Equipamento","Nº Saídas","Itens Diferentes","Colaboradores","Última Saída"]],
-      body:resumo.map(r=>[r.equipamento,r.totalMovimentacoes,r.itensDiferentes,r.colaboradores.join(", ")||"—",fmtDateShort(r.ultima)]),
-      styles:{fontSize:8,cellPadding:3},headStyles:{fillColor:[91,33,182],textColor:255,fontStyle:"bold"},
-      alternateRowStyles:{fillColor:[245,243,255]},columnStyles:{1:{halign:"center"},2:{halign:"center"}},margin:{left:14,right:14}});
+    pdf.text("RESUMO POR SETOR",14,34);pdf.setTextColor(30,30,30);
+    pdf.autoTable({startY:37,
+      head:[["Setor","Nº Saídas","Itens Diferentes","Valor Total","Colaboradores","Última Saída"]],
+      body:resumo.map(r=>[r.setor,r.total,r.itensDif,r.valorTotal>0?fmtBRL(r.valorTotal):"—",r.colaboradores.join(", ")||"—",fmtDateShort(r.ultima)]),
+      styles:{fontSize:8,cellPadding:3},
+      headStyles:{fillColor:[91,33,182],textColor:255,fontStyle:"bold"},
+      alternateRowStyles:{fillColor:[245,243,255]},
+      margin:{left:14,right:14}});
   }
-  Object.entries(agrupado).forEach(([equip,movs])=>{
-    pdf.addPage();addHeader(`Detalhamento · ${equip}`);
+
+  Object.entries(agrupado).forEach(([setor2,movs])=>{
+    pdf.addPage();addHeader(`Detalhamento · ${setor2}`);
     pdf.setFontSize(10);pdf.setFont("helvetica","bold");pdf.setTextColor(91,33,182);
-    pdf.text(`EQUIPAMENTO: ${equip.toUpperCase()}`,14,26);
+    pdf.text(`SETOR: ${setor2.toUpperCase()}`,14,26);
     pdf.setFontSize(8);pdf.setFont("helvetica","normal");pdf.setTextColor(80,80,80);
-    pdf.text(`${movs.length} saída(s)`,14,31);pdf.setTextColor(30,30,30);
+    const vt=movs.reduce((s,m)=>s+(m.valorTotal||0),0);
+    pdf.text(`${movs.length} saída(s)${vt>0?" · Total: "+fmtBRL(vt):""}`,14,31);
+    pdf.setTextColor(30,30,30);
     pdf.autoTable({startY:35,
-      head:[["Data/Hora","Item","Cód.","Qtd.","Un.","Colaborador","Responsável","Est. Antes→Depois","Obs."]],
-      body:movs.map(m=>[fmtDate(m.criadoEm),m.itemNome,m.itemCodigo||"—",m.quantidade,m.itemUnidade||"un",
-        m.colaborador||"—",m.responsavel||"—",m.estoqueAntes!==undefined?`${m.estoqueAntes}→${m.estoqueDepois}`:"—",m.observacao||"—"]),
-      styles:{fontSize:7.5,cellPadding:2.5,overflow:"linebreak"},
-      headStyles:{fillColor:[30,30,30],textColor:255,fontStyle:"bold",fontSize:7.5},
+      head:[["Data/Hora","Item","Cód.","Qtd.","Un.","Preço","Valor","Colaborador","Responsável","Obs."]],
+      body:movs.map(m=>[
+        fmtDate(m.criadoEm),m.itemNome,m.itemCodigo||"—",m.quantidade,m.itemUnidade||"un",
+        m.precoUnitario!=null?fmtBRL(m.precoUnitario):"—",
+        m.valorTotal!=null?fmtBRL(m.valorTotal):"—",
+        m.colaborador||"—",m.responsavel||"—",m.observacao||"—"
+      ]),
+      styles:{fontSize:7,cellPadding:2,overflow:"linebreak"},
+      headStyles:{fillColor:[30,30,30],textColor:255,fontStyle:"bold",fontSize:7},
       alternateRowStyles:{fillColor:[248,248,248]},
-      columnStyles:{0:{cellWidth:28},3:{halign:"center",cellWidth:12},4:{halign:"center",cellWidth:12},7:{halign:"center",cellWidth:24}},
-      margin:{left:14,right:14},didDrawPage:()=>addHeader(`Detalhamento · ${equip}`)});
+      columnStyles:{0:{cellWidth:26},3:{halign:"center",cellWidth:10},4:{halign:"center",cellWidth:10},5:{cellWidth:20},6:{cellWidth:20}},
+      margin:{left:14,right:14},
+      didDrawPage:()=>addHeader(`Detalhamento · ${setor2}`)});
   });
+
   const pages=pdf.internal.getNumberOfPages();
-  for(let i=1;i<=pages;i++){pdf.setPage(i);pdf.setFontSize(7);pdf.setTextColor(160,160,160);
-    pdf.text(`Página ${i} de ${pages}`,W/2,pdf.internal.pageSize.getHeight()-5,{align:"center"});}
+  for(let i=1;i<=pages;i++){
+    pdf.setPage(i);pdf.setFontSize(7);pdf.setTextColor(160,160,160);
+    pdf.text(`Página ${i} de ${pages}`,W/2,pdf.internal.pageSize.getHeight()-5,{align:"center"});
+  }
   pdf.save(`relatorio_saidas_${new Date().toISOString().slice(0,10)}.pdf`);
 };
 
