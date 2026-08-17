@@ -215,11 +215,19 @@ const fmtBRL = v => {
   return isNaN(n)?"—":"R$ "+n.toFixed(2).replace(".",",").replace(/\B(?=(\d{3})+(?!\d))/g,".");
 };
 const statusItem = item => {
-  const q=Number(item.quantidade),m=Number(item.qtdMinima);
-  if(q===0)    return{label:"Zerado",  cls:"badge-red",   cor:"#dc2626"};
-  if(q<=m)     return{label:"Crítico", cls:"badge-orange", cor:"#c2410c"};
-  if(q<=m*1.5) return{label:"Baixo",   cls:"badge-yellow", cor:"#a16207"};
-  return            {label:"OK",      cls:"badge-green",  cor:"#1a1a1a"};
+  const q=Number(item.quantidade),m=Number(item.qtdMinima),x=Number(item.qtdMaxima||0);
+  if(q===0)       return{label:"Zerado",   cls:"badge-red",    cor:"#dc2626"};
+  if(q<=m)        return{label:"Crítico",  cls:"badge-orange",  cor:"#c2410c"};
+  if(q<=m*1.5)    return{label:"Baixo",    cls:"badge-yellow",  cor:"#a16207"};
+  if(x>0&&q>=x)   return{label:"No máximo",cls:"badge-blue",    cor:"#1d4ed8"};
+  return               {label:"OK",       cls:"badge-green",   cor:"#1a1a1a"};
+};
+// Quanto falta para atingir o máximo (para sugerir pedido)
+const sugerirPedido = item => {
+  const q=Number(item.quantidade), x=Number(item.qtdMaxima||0);
+  if(x<=0) return null;
+  const falta = x - q;
+  return falta > 0 ? falta : 0;
 };
 const precoVigente = item => {
   if(!item.compras||!item.compras.length)return null;
@@ -282,7 +290,18 @@ function renderEstoque(){
       ${criticos.length?`<div class="stat-card danger"><div class="stat-num">${criticos.length}</div><div class="stat-label">Crítico${criticos.length>1?"s":""}</div></div>`:""}
       <div class="stat-card"><div class="stat-num">${movimentacoes.filter(m=>m.tipo==="saida").length}</div><div class="stat-label">Total saídas</div></div>
     </div>
-    ${criticos.length?`<div class="alert-critico"><p>⚠️ Estoque crítico ou zerado:</p><p>${criticos.map(i=>esc(i.nome)).join(" · ")}</p></div>`:""}
+    ${criticos.length?`<div class="alert-critico">
+      <p>⚠️ Estoque crítico ou zerado — sugestão de pedido:</p>
+      <div style="display:flex;flex-direction:column;gap:4px;margin-top:4px;">
+        ${criticos.map(i=>{
+          const s=sugerirPedido(i);
+          return`<div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="color:#ea580c;">${esc(i.nome)}</span>
+            ${s>0?`<span style="font-weight:700;color:#2563eb;">🛒 pedir ${s} ${esc(i.unidade)}</span>`
+                 :`<span style="color:#9ca3af;font-size:11px;">sem máx. definido</span>`}
+          </div>`;}).join("")}
+      </div>
+    </div>`:""}
     <div class="search-row">
       <input class="search-input" id="inp-busca" placeholder="🔍 Buscar por nome ou código..." value="${esc(busca)}"/>
       <button class="btn btn-purple" onclick="abrirModalItem()">+ Novo Item</button>
@@ -315,7 +334,8 @@ function renderEstoque(){
               <div>
                 <div class="item-qtd" style="color:${st.cor}">${item.quantidade}</div>
                 <div class="item-qtd-label">${esc(item.unidade)}</div>
-                <div class="item-qtd-label">mín ${item.qtdMinima}</div>
+                <div class="item-qtd-label">mín ${item.qtdMinima}${item.qtdMaxima?` · máx ${item.qtdMaxima}`:""}</div>
+                ${(()=>{const s=sugerirPedido(item);return s>0?`<div class="item-qtd-label" style="color:#2563eb;font-weight:700;">🛒 pedir ${s}</div>`:""})()}
               </div>
             </div>
             <div class="item-actions">
@@ -479,6 +499,16 @@ window.abrirModalItem=id=>{
         <label>Qtd. Mínima</label>
         <input id="f-qtdmin" type="number" value="${item.qtdMinima||0}" min="0"/>
       </div>
+      <div class="form-group">
+        <label>Qtd. Máxima</label>
+        <input id="f-qtdmax" type="number" value="${item.qtdMaxima||0}" min="0" placeholder="0 = sem limite"/>
+      </div>
+      <div class="form-group" style="display:flex;align-items:flex-end;">
+        <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 12px;font-size:12px;color:#0369a1;line-height:1.4;width:100%;">
+          💡 Quando a qtd. atual estiver abaixo do <b>mínimo</b>, o app alerta.<br/>
+          O <b>máximo</b> define quanto pedir de cada vez.
+        </div>
+      </div>
       <div class="full form-group">
         <label>Observações</label>
         <textarea id="f-obs" placeholder="Fornecedor habitual, marca, etc.">${esc(item.observacoes||"")}</textarea>
@@ -590,6 +620,7 @@ window.submitItem=async(id,existURL,existPath)=>{
     localizacao:$("f-local").value.trim(),
     quantidade:Number($("f-qtd").value),
     qtdMinima:Number($("f-qtdmin").value),
+    qtdMaxima:Number($("f-qtdmax").value)||0,
     unidade:$("f-unidade").value,
     observacoes:$("f-obs").value.trim(),
     fotoURL:fotoTemp?.url||existURL||"",
@@ -616,6 +647,7 @@ window.setCategoria=c=>{filtroCategoria=c;renderEstoque();};
 window.abrirModalMov=id=>{
   const item=itens.find(i=>i.id===id);
   const preco=precoVigente(item);
+  const pedido=sugerirPedido(item);
   abrirModal("Registrar Movimentação",`
     <div class="item-preview-modal">
       <div style="width:50px;height:50px;border-radius:8px;overflow:hidden;flex-shrink:0;background:#f0ebe0;display:flex;align-items:center;justify-content:center;font-size:22px;">
@@ -626,8 +658,11 @@ window.abrirModalMov=id=>{
         <div style="font-size:15px;font-weight:700;">${esc(item.nome)}</div>
         <div style="font-size:13px;color:#6b7280;">
           Estoque: <b style="color:#1a1a1a;">${item.quantidade} ${esc(item.unidade)}</b>
+          ${item.qtdMinima?` · mín <b>${item.qtdMinima}</b>`:""}
+          ${item.qtdMaxima?` · máx <b>${item.qtdMaxima}</b>`:""}
           ${preco!==null?` · <b style="color:#16a34a;">💰 ${fmtBRL(preco)}</b>`:""}
         </div>
+        ${pedido>0?`<div style="font-size:12px;color:#2563eb;font-weight:700;margin-top:3px;">🛒 Sugestão de pedido: ${pedido} ${esc(item.unidade)}</div>`:""}
       </div>
     </div>
     <div class="form-grid">
@@ -640,8 +675,8 @@ window.abrirModalMov=id=>{
         </select>
       </div>
       <div class="form-group">
-        <label>Quantidade</label>
-        <input id="m-qtd" type="number" value="1" min="1"/>
+        <label>Quantidade ${pedido>0?'<span style="color:#2563eb;font-size:11px;">(sugerido: '+pedido+')</span>':''}</label>
+        <input id="m-qtd" type="number" value="${pedido>0?pedido:1}" min="1"/>
       </div>
       <div class="full form-group">
         <label>Responsável *</label>
@@ -688,7 +723,13 @@ window.submitMov=async itemId=>{
   if(tipo==="saida")novaQtd-=qtd;
   else if(tipo==="entrada")novaQtd+=qtd;
   else novaQtd=qtd;
-  if(novaQtd<0){setSalvando(false);alert("Quantidade insuficiente!");return;}
+  if(novaQtd<0){setSalvando(false);alert("Quantidade insuficiente em estoque!");return;}
+  const maxItem=Number(item.qtdMaxima||0);
+  if(tipo==="entrada"&&maxItem>0&&novaQtd>maxItem){
+    if(!confirm(`⚠️ Esta entrada vai levar o estoque para ${novaQtd} ${item.unidade||"un"}, acima do máximo definido (${maxItem}).
+
+Deseja continuar mesmo assim?`)){setSalvando(false);return;}
+  }
   const preco=precoVigente(item);
   try{
     await updateDoc(doc(db,"itens",itemId),{quantidade:novaQtd});
