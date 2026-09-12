@@ -277,78 +277,97 @@ function renderTab(){
 }
 
 // ── RENDER ESTOQUE ────────────────────────────────────────────────────────────
-function renderEstoque(){
+function renderListaItens(){
   const criticos=itens.filter(i=>Number(i.quantidade)<=Number(i.qtdMinima));
   const filtrados=itens.filter(i=>{
-    const mb=(i.nome||"").toLowerCase().includes(busca.toLowerCase())||(i.codigo||"").toLowerCase().includes(busca.toLowerCase());
+    const mb=(i.nome||"").toLowerCase().includes(busca.toLowerCase())||(i.codigo||"").toLowerCase().includes(busca.toLowerCase())||(i.localizacao||"").toLowerCase().includes(busca.toLowerCase());
     const mc=filtroCategoria==="Todos"||i.categoria===filtroCategoria;
     return mb&&mc;
   });
-  let html=`
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-num">${itens.length}</div><div class="stat-label">Itens cadastrados</div></div>
-      ${criticos.length?`<div class="stat-card danger"><div class="stat-num">${criticos.length}</div><div class="stat-label">Crítico${criticos.length>1?"s":""}</div></div>`:""}
-      <div class="stat-card"><div class="stat-num">${movimentacoes.filter(m=>m.tipo==="saida").length}</div><div class="stat-label">Total saídas</div></div>
+
+  // Stats
+  const statsEl=$("est-stats");
+  if(statsEl) statsEl.innerHTML=`
+    <div class="stat-card"><div class="stat-num">${itens.length}</div><div class="stat-label">Itens cadastrados</div></div>
+    ${criticos.length?`<div class="stat-card danger"><div class="stat-num">${criticos.length}</div><div class="stat-label">Crítico${criticos.length>1?"s":""}</div></div>`:""}
+    <div class="stat-card"><div class="stat-num">${movimentacoes.filter(m=>m.tipo==="saida").length}</div><div class="stat-label">Total saídas</div></div>`;
+
+  // Alerta críticos
+  const alertEl=$("est-alerta");
+  if(alertEl) alertEl.innerHTML=criticos.length?`<div class="alert-critico">
+    <p>⚠️ Estoque crítico ou zerado — sugestão de pedido:</p>
+    <div style="display:flex;flex-direction:column;gap:4px;margin-top:4px;">
+      ${criticos.map(i=>{
+        const s=sugerirPedido(i);
+        return`<div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="color:#ea580c;">${esc(i.nome)}</span>
+          ${s>0?`<span style="font-weight:700;color:#2563eb;">🛒 pedir ${s} ${esc(i.unidade)}</span>`
+               :`<span style="color:#9ca3af;font-size:11px;">sem máx. definido</span>`}
+        </div>`;}).join("")}
     </div>
-    ${criticos.length?`<div class="alert-critico">
-      <p>⚠️ Estoque crítico ou zerado — sugestão de pedido:</p>
-      <div style="display:flex;flex-direction:column;gap:4px;margin-top:4px;">
-        ${criticos.map(i=>{
-          const s=sugerirPedido(i);
-          return`<div style="display:flex;justify-content:space-between;align-items:center;">
-            <span style="color:#ea580c;">${esc(i.nome)}</span>
-            ${s>0?`<span style="font-weight:700;color:#2563eb;">🛒 pedir ${s} ${esc(i.unidade)}</span>`
-                 :`<span style="color:#9ca3af;font-size:11px;">sem máx. definido</span>`}
-          </div>`;}).join("")}
-      </div>
-    </div>`:""}
-    <div class="search-row">
-      <input class="search-input" id="inp-busca" placeholder="🔍 Buscar por nome ou código..." value="${esc(busca)}"/>
-      <button class="btn btn-purple" onclick="abrirModalItem()">+ Novo Item</button>
-    </div>
-    <div class="section-label">Categoria</div>
-    <div class="pills">
-      ${["Todos",...getCategorias()].map(c=>`<span class="pill${filtroCategoria===c?" active":""}" onclick="setCategoria('${esc(c)}')">${esc(c)}</span>`).join("")}
-    </div>
-    <div class="section-label">Itens em estoque</div>
-    ${filtrados.length===0
-      ?`<div class="empty"><div class="empty-icon">📦</div><p>Nenhum item encontrado</p><small>Clique em "+ Novo Item" para cadastrar</small></div>`
-      :filtrados.map(item=>{
-        const st=statusItem(item);
-        const preco=precoVigente(item);
-        return`<div class="item-card">
-          <div class="item-foto">${item.fotoURL?`<img src="${esc(item.fotoURL)}" alt=""/>`:"📦"}</div>
-          <div class="item-info">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
-              <div style="min-width:0;">
-                <div class="item-nome">${esc(item.nome)}</div>
-                <div class="item-meta">
-                  ${item.codigo?`<span>#${esc(item.codigo)}</span>`:""}
-                  <span class="badge badge-purple">${esc(item.categoria)}</span>
-                  <span class="badge ${st.cls}">${st.label}</span>
-                  ${item.localizacao?`<span>📍 ${esc(item.localizacao)}</span>`:""}
-                  ${preco!==null?`<span style="color:#16a34a;font-weight:700;">💰 ${fmtBRL(preco)}</span>`:""}
-                </div>
-                ${item.observacoes?`<div style="font-size:12px;color:#9ca3af;font-style:italic;">${esc(item.observacoes)}</div>`:""}
+  </div>`:"";
+
+  // Pills categorias
+  const pillsEl=$("est-pills");
+  if(pillsEl) pillsEl.innerHTML=["Todos",...getCategorias()].map(c=>`<span class="pill${filtroCategoria===c?" active":""}" onclick="setCategoria('${esc(c)}')">${esc(c)}</span>`).join("");
+
+  // Lista de itens — só esta parte muda durante a busca
+  const listaEl=$("est-lista");
+  if(!listaEl) return;
+  listaEl.innerHTML=filtrados.length===0
+    ?`<div class="empty"><div class="empty-icon">📦</div><p>Nenhum item encontrado</p><small>Clique em "+ Novo Item" para cadastrar</small></div>`
+    :filtrados.map(item=>{
+      const st=statusItem(item);
+      const preco=precoVigente(item);
+      return`<div class="item-card">
+        <div class="item-foto">${item.fotoURL?`<img src="${esc(item.fotoURL)}" alt=""/>`:"📦"}</div>
+        <div class="item-info">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+            <div style="min-width:0;">
+              <div class="item-nome">${esc(item.nome)}</div>
+              <div class="item-meta">
+                ${item.codigo?`<span>#${esc(item.codigo)}</span>`:""}
+                <span class="badge badge-purple">${esc(item.categoria)}</span>
+                <span class="badge ${st.cls}">${st.label}</span>
+                ${item.localizacao?`<span>📍 ${esc(item.localizacao)}</span>`:""}
+                ${preco!==null?`<span style="color:#16a34a;font-weight:700;">💰 ${fmtBRL(preco)}</span>`:""}
               </div>
-              <div>
-                <div class="item-qtd" style="color:${st.cor}">${item.quantidade}</div>
-                <div class="item-qtd-label">${esc(item.unidade)}</div>
-                <div class="item-qtd-label">mín ${item.qtdMinima}${item.qtdMaxima?` · máx ${item.qtdMaxima}`:""}</div>
-                ${(()=>{const s=sugerirPedido(item);return s>0?`<div class="item-qtd-label" style="color:#2563eb;font-weight:700;">🛒 pedir ${s}</div>`:""})()}
-              </div>
+              ${item.observacoes?`<div style="font-size:12px;color:#9ca3af;font-style:italic;">${esc(item.observacoes)}</div>`:""}
             </div>
-            <div class="item-actions">
-              <button class="btn btn-purple btn-sm" onclick="abrirModalMov('${item.id}')">📤 Movimentar</button>
-              <button class="btn btn-secondary btn-sm" onclick="abrirModalItem('${item.id}')">✏️ Editar</button>
-              <button class="btn btn-danger btn-sm" onclick="deletarItem('${item.id}')">🗑️</button>
+            <div>
+              <div class="item-qtd" style="color:${st.cor}">${item.quantidade}</div>
+              <div class="item-qtd-label">${esc(item.unidade)}</div>
+              <div class="item-qtd-label">mín ${item.qtdMinima}${item.qtdMaxima?` · máx ${item.qtdMaxima}`:""}</div>
+              ${(()=>{const s=sugerirPedido(item);return s>0?`<div class="item-qtd-label" style="color:#2563eb;font-weight:700;">🛒 pedir ${s}</div>`:""})()}
             </div>
           </div>
-        </div>`;
-      }).join("")}
-  `;
-  $("main").innerHTML=html;
-  $("inp-busca").addEventListener("input",e=>{busca=e.target.value;renderEstoque();});
+          <div class="item-actions">
+            <button class="btn btn-purple btn-sm" onclick="abrirModalMov('${item.id}')">📤 Movimentar</button>
+            <button class="btn btn-secondary btn-sm" onclick="abrirModalItem('${item.id}')">✏️ Editar</button>
+            <button class="btn btn-danger btn-sm" onclick="deletarItem('${item.id}')">🗑️</button>
+          </div>
+        </div>
+      </div>`;
+    }).join("");
+}
+
+function renderEstoque(){
+  // Monta o esqueleto UMA vez — busca e botão não são recriados
+  if(!$("est-lista")){
+    $("main").innerHTML=`
+      <div class="stats-row" id="est-stats"></div>
+      <div id="est-alerta"></div>
+      <div class="search-row">
+        <input class="search-input" id="inp-busca" placeholder="🔍 Buscar por nome, código ou localização..." autocomplete="off"/>
+        <button class="btn btn-purple" onclick="abrirModalItem()">+ Novo Item</button>
+      </div>
+      <div class="section-label">Categoria</div>
+      <div class="pills" id="est-pills"></div>
+      <div class="section-label">Itens em estoque</div>
+      <div id="est-lista"></div>`;
+    $("inp-busca").addEventListener("input",e=>{busca=e.target.value;renderListaItens();});
+  }
+  renderListaItens();
 }
 
 // ── RENDER HISTÓRICO ──────────────────────────────────────────────────────────
