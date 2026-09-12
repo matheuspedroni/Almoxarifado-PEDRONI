@@ -283,6 +283,13 @@ function renderListaItens(){
     const mb=(i.nome||"").toLowerCase().includes(busca.toLowerCase())||(i.codigo||"").toLowerCase().includes(busca.toLowerCase())||(i.localizacao||"").toLowerCase().includes(busca.toLowerCase());
     const mc=filtroCategoria==="Todos"||i.categoria===filtroCategoria;
     return mb&&mc;
+  }).sort((a,b)=>{
+    const la=(a.localizacao||"").toLowerCase();
+    const lb=(b.localizacao||"").toLowerCase();
+    if(la&&!lb) return -1; // com localização vem antes
+    if(!la&&lb) return 1;
+    if(la!==lb) return la.localeCompare(lb,"pt-BR",{numeric:true,sensitivity:"base"});
+    return (a.nome||"").localeCompare(b.nome||"","pt-BR"); // desempate por nome
   });
 
   // Stats
