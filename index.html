@@ -73,9 +73,23 @@
   .mov-qtd-entrada{font-size:20px;font-weight:800;color:#16a34a;}
   .mov-meta{font-size:12px;color:#6b7280;display:flex;flex-wrap:wrap;gap:8px;}
   .mov-date{font-size:11px;color:#b0a99f;margin-top:4px;}
-  .alert-critico{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px 16px;margin-bottom:14px;}
-  .alert-critico p:first-child{font-size:12px;font-weight:700;color:#c2410c;margin-bottom:3px;}
-  .alert-critico p:last-child{font-size:12px;color:#ea580c;}
+  .alert-critico{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;margin-bottom:14px;overflow:hidden;}
+  .alert-header{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;cursor:pointer;user-select:none;}
+  .alert-header:hover{background:#fff0e0;}
+  .alert-header-left{display:flex;align-items:center;gap:8px;}
+  .alert-header-title{font-size:13px;font-weight:700;color:#c2410c;}
+  .alert-header-count{background:#c2410c;color:#fff;border-radius:999px;font-size:11px;font-weight:700;padding:1px 7px;}
+  .alert-toggle{font-size:12px;color:#9ca3af;transition:transform .2s;}
+  .alert-toggle.open{transform:rotate(180deg);}
+  .alert-body{border-top:1px solid #fed7aa;}
+  .alert-com-pedido{background:#eff6ff;}
+  .alert-sem-max{background:#fff7ed;}
+  .alert-row{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid rgba(0,0,0,.04);gap:8px;}
+  .alert-row:last-child{border-bottom:none;}
+  .alert-nome{font-size:12px;color:#92400e;flex:1;min-width:0;}
+  .alert-pedido{font-size:12px;font-weight:700;color:#2563eb;white-space:nowrap;}
+  .alert-semmax{font-size:11px;color:#b0a99f;white-space:nowrap;}
+  .alert-section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:6px 14px 2px;color:#9ca3af;}
   .stats-row{display:flex;gap:10px;margin-bottom:20px;}
   .stat-card{flex:1;background:#fff;border:1px solid #e5e0d8;border-radius:10px;padding:14px;text-align:center;}
   .stat-num{font-size:28px;font-weight:800;color:#5b21b6;line-height:1;}
@@ -300,20 +314,42 @@ function renderListaItens(){
     ${criticos.length?`<div class="stat-card danger"><div class="stat-num">${criticos.length}</div><div class="stat-label">Crítico${criticos.length>1?"s":""}</div></div>`:""}
     <div class="stat-card"><div class="stat-num">${movimentacoes.filter(m=>m.tipo==="saida").length}</div><div class="stat-label">Total saídas</div></div>`;
 
-  // Alerta críticos
+  // Alerta críticos — colapsável com dois grupos
   const alertEl=$("est-alerta");
-  if(alertEl) alertEl.innerHTML=criticos.length?`<div class="alert-critico">
-    <p>⚠️ Estoque crítico ou zerado — sugestão de pedido:</p>
-    <div style="display:flex;flex-direction:column;gap:4px;margin-top:4px;">
-      ${criticos.map(i=>{
-        const s=sugerirPedido(i);
-        return`<div style="display:flex;justify-content:space-between;align-items:center;">
-          <span style="color:#ea580c;">${esc(i.nome)}</span>
-          ${s>0?`<span style="font-weight:700;color:#2563eb;">🛒 pedir ${s} ${esc(i.unidade)}</span>`
-               :`<span style="color:#9ca3af;font-size:11px;">sem máx. definido</span>`}
-        </div>`;}).join("")}
-    </div>
-  </div>`:"";
+  if(alertEl){
+    if(!criticos.length){alertEl.innerHTML="";} else {
+      const comPedido=criticos.filter(i=>sugerirPedido(i)>0);
+      const semMax=criticos.filter(i=>!(sugerirPedido(i)>0));
+      alertEl.innerHTML=`<div class="alert-critico">
+        <div class="alert-header" onclick="toggleAlerta()">
+          <div class="alert-header-left">
+            <span style="font-size:16px;">⚠️</span>
+            <span class="alert-header-title">Estoque crítico ou zerado</span>
+            <span class="alert-header-count">${criticos.length}</span>
+          </div>
+          <span class="alert-toggle" id="alert-toggle-icon">▼</span>
+        </div>
+        <div class="alert-body" id="alert-body" style="display:none;">
+          ${comPedido.length?`<div class="alert-com-pedido">
+            <div class="alert-section-label">🛒 Com sugestão de pedido</div>
+            ${comPedido.map(i=>{const s=sugerirPedido(i);return`
+              <div class="alert-row">
+                <span class="alert-nome">${esc(i.nome)}</span>
+                <span class="alert-pedido">🛒 pedir ${s} ${esc(i.unidade)}</span>
+              </div>`;}).join("")}
+          </div>`:""}
+          ${semMax.length?`<div class="alert-sem-max">
+            <div class="alert-section-label">⚙️ Sem quantidade máxima definida</div>
+            ${semMax.map(i=>`
+              <div class="alert-row">
+                <span class="alert-nome">${esc(i.nome)}</span>
+                <span class="alert-semmax">definir máx.</span>
+              </div>`).join("")}
+          </div>`:""}
+        </div>
+      </div>`;
+    }
+  }
 
   // Pills categorias
   const pillsEl=$("est-pills");
