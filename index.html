@@ -224,8 +224,9 @@ const statusItem = item => {
 };
 // Quanto falta para atingir o máximo (para sugerir pedido)
 const sugerirPedido = item => {
-  const q=Number(item.quantidade), x=Number(item.qtdMaxima||0);
-  if(x<=0) return null;
+  const q=Number(item.quantidade), m=Number(item.qtdMinima||0), x=Number(item.qtdMaxima||0);
+  if(x<=0) return null;       // sem máximo definido: não sugere
+  if(q > m) return null;      // estoque acima do mínimo: não sugere
   const falta = x - q;
   return falta > 0 ? falta : 0;
 };
