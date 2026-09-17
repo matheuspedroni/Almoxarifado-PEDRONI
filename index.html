@@ -319,7 +319,7 @@ function renderListaItens(){
   if(alertEl){
     if(!criticos.length){alertEl.innerHTML="";} else {
       const comPedido=criticos.filter(i=>sugerirPedido(i)>0);
-      const semMax=criticos.filter(i=>!(sugerirPedido(i)>0));
+      const semMax=criticos.filter(i=>!Number(i.qtdMaxima||0)); // só os que realmente não têm máximo
       alertEl.innerHTML=`<div class="alert-critico">
         <div class="alert-header" onclick="toggleAlerta()">
           <div class="alert-header-left">
