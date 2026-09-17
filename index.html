@@ -437,10 +437,17 @@ function renderHistorico(){
             ${m.responsavel?`<span>🔑 <b>${esc(m.responsavel)}</b></span>`:""}
             ${m.colaborador?`<span>👤 ${esc(m.colaborador)}</span>`:""}
             ${m.setor?`<span>⚙️ ${esc(m.setor)}</span>`:""}
+            ${m.motivo?`<span>📋 ${esc(m.motivo)}</span>`:""}
             ${m.observacao?`<span>💬 ${esc(m.observacao)}</span>`:""}
           </div>
           ${m.estoqueAntes!==undefined?`<div style="font-size:11px;color:#b0a99f;margin-top:3px;">Estoque: ${m.estoqueAntes} → ${m.estoqueDepois}</div>`:""}
-          <div class="mov-date">${fmtDate(m.criadoEm)}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+            <div class="mov-date">${fmtDate(m.criadoEm)}</div>
+            <button onclick="excluirMovimentacao('${m.id}','${m.itemId}',${m.quantidade},'${m.tipo}',${m.estoqueDepois!==undefined?m.estoqueDepois:'undefined'})"
+              style="background:#fee2e2;color:#dc2626;border:none;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;cursor:pointer;">
+              🗑️ Excluir
+            </button>
+          </div>
         </div>`).join("")}
   `;
 }
@@ -554,10 +561,15 @@ window.abrirModalItem=id=>{
         <label>Unidade</label>
         <select id="f-unidade">${UNIDADES.map(u=>`<option${item.unidade===u?" selected":""}>${u}</option>`).join("")}</select>
       </div>
-      <div class="form-group">
-        <label>Qtd. Atual</label>
-        <input id="f-qtd" type="number" value="${item.quantidade||0}" min="0"/>
-      </div>
+      ${!id?`<div class="form-group">
+        <label>Qtd. Inicial</label>
+        <input id="f-qtd" type="number" value="0" min="0"/>
+      </div>`:`<div class="form-group" style="display:flex;align-items:flex-end;">
+        <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 12px;font-size:12px;color:#0369a1;line-height:1.5;width:100%;">
+          📦 Estoque atual: <b>${item.quantidade} ${item.unidade||""}</b><br/>
+          Para alterar a quantidade use <b>Movimentar → Ajuste</b>.
+        </div>
+      </div>`}
       <div class="form-group">
         <label>Qtd. Mínima</label>
         <input id="f-qtdmin" type="number" value="${item.qtdMinima||0}" min="0"/>
@@ -681,7 +693,7 @@ window.submitItem=async(id,existURL,existPath)=>{
     nome, codigo:$("f-codigo").value.trim(),
     categoria:$("f-categoria").value,
     localizacao:$("f-local").value.trim(),
-    quantidade:Number($("f-qtd").value),
+    quantidade:id?Number(itens.find(i=>i.id===id)?.quantidade||0):Number($("f-qtd")?.value||0),
     qtdMinima:Number($("f-qtdmin").value),
     qtdMaxima:Number($("f-qtdmax").value)||0,
     unidade:$("f-unidade").value,
@@ -705,6 +717,42 @@ window.deletarItem=async id=>{
   await deleteDoc(doc(db,"itens",id));
 };
 window.setCategoria=c=>{filtroCategoria=c;renderEstoque();};
+
+// Mostrar/esconder campos conforme tipo de movimentação
+window.toggleCamposMov=tipo=>{
+  const wrapColab=$("m-wrap-colab");
+  const wrapSetor=$("m-wrap-setor");
+  const wrapCompra=$("m-wrap-compra");
+  const wrapMotivo=$("m-wrap-motivo");
+  const wrapMotivoObs=$("m-wrap-motivo-obs");
+  if(wrapColab)     wrapColab.style.display=tipo==="saida"?"":"none";
+  if(wrapSetor)     wrapSetor.style.display=tipo==="saida"?"":"none";
+  if(wrapCompra)    wrapCompra.style.display=tipo==="entrada"?"":"none";
+  if(wrapMotivo)    wrapMotivo.style.display=tipo==="ajuste"?"":"none";
+  if(wrapMotivoObs) wrapMotivoObs.style.display=tipo==="ajuste"?"":"none";
+};
+
+// Excluir movimentação e reverter estoque
+window.excluirMovimentacao=async(movId,itemId,qtd,tipo,estoqueDepois)=>{
+  if(!confirm("Excluir esta movimentação? O estoque será revertido automaticamente."))return;
+  setSalvando(true);
+  try{
+    const item=itens.find(i=>i.id===itemId);
+    if(item){
+      // Reverter: se era saída, devolve; se era entrada, retira
+      let qtdRevertida=Number(item.quantidade);
+      if(tipo==="saida")      qtdRevertida+=Number(qtd);
+      else if(tipo==="entrada")qtdRevertida-=Number(qtd);
+      // Para ajuste, tenta restaurar o estoqueAntes se disponível
+      const mov=movimentacoes.find(m=>m.id===movId);
+      if(tipo==="ajuste"&&mov&&mov.estoqueAntes!==undefined) qtdRevertida=Number(mov.estoqueAntes);
+      if(qtdRevertida<0)qtdRevertida=0;
+      await updateDoc(doc(db,"itens",itemId),{quantidade:qtdRevertida});
+    }
+    await deleteDoc(doc(db,"movimentacoes",movId));
+  }catch(e){alert("Erro ao excluir: "+e.message);}
+  setSalvando(false);
+};
 window.toggleAlerta=()=>{
   const body=$("alert-body");
   const icon=$("alert-toggle-icon");
@@ -739,10 +787,10 @@ window.abrirModalMov=id=>{
     <div class="form-grid">
       <div class="form-group">
         <label>Tipo</label>
-        <select id="m-tipo">
+        <select id="m-tipo" onchange="toggleCamposMov(this.value)">
           <option value="saida">📤 Saída</option>
           <option value="entrada">📥 Entrada</option>
-          <option value="ajuste">🔧 Ajuste</option>
+          <option value="ajuste">🔧 Ajuste de Inventário</option>
         </select>
       </div>
       <div class="form-group">
@@ -756,16 +804,52 @@ window.abrirModalMov=id=>{
           ${responsaveis.map(r=>`<option value="${esc(r.nome)}">${esc(r.nome)}${r.cargo?" · "+esc(r.cargo):""}</option>`).join("")}
         </select>
       </div>
-      <div class="full form-group">
+      <div class="full form-group" id="m-wrap-colab">
         <label>Colaborador que Retirou *</label>
         <input id="m-colab" placeholder="Nome do colaborador"/>
       </div>
-      <div class="full form-group">
+      <div class="full form-group" id="m-wrap-setor">
         <label>Setor / Destino *</label>
         <select id="m-setor">
           <option value="">— Selecione o setor —</option>
           ${SETORES.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("")}
         </select>
+      </div>
+      <!-- Campo motivo — aparece só no Ajuste -->
+      <div class="full form-group" id="m-wrap-motivo" style="display:none;">
+        <label>Motivo do Ajuste *</label>
+        <select id="m-motivo">
+          <option value="">— Selecione —</option>
+          <option value="Inventário físico">Inventário físico</option>
+          <option value="Perda ou avaria">Perda ou avaria</option>
+          <option value="Erro de cadastro">Erro de cadastro</option>
+          <option value="Vencimento / descarte">Vencimento / descarte</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </div>
+      <div class="full form-group" id="m-wrap-motivo-obs" style="display:none;">
+        <label>Detalhe do Motivo</label>
+        <input id="m-motivo-obs" placeholder="Descreva o motivo (opcional)"/>
+      </div>
+      <!-- Campos de compra — aparecem só na Entrada -->
+      <div class="full" id="m-wrap-compra" style="display:none;">
+        <div style="font-size:13px;font-weight:700;color:#16a34a;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #dcfce7;">
+          💰 Registrar dados da compra (opcional)
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-group">
+            <label>Data da Compra</label>
+            <input id="m-c-data" type="date" value="${new Date().toISOString().slice(0,10)}"/>
+          </div>
+          <div class="form-group">
+            <label>Preço Unit. R$</label>
+            <input id="m-c-preco" type="number" step="0.01" min="0" placeholder="0,00"/>
+          </div>
+          <div class="form-group full" style="grid-column:1/-1;">
+            <label>Fornecedor</label>
+            <input id="m-c-forn" placeholder="opcional"/>
+          </div>
+        </div>
       </div>
       <div class="full form-group">
         <label>Observação</label>
@@ -784,9 +868,12 @@ window.submitMov=async itemId=>{
   const resp=$("m-resp")?.value;
   const colab=$("m-colab")?.value?.trim();
   const setor=$("m-setor")?.value;
+  const motivo=$("m-motivo")?.value||"";
+  const motivoObs=$("m-motivo-obs")?.value?.trim()||"";
   if(!resp){alert("Selecione o responsável");return;}
   if(tipo==="saida"&&!colab){alert("Informe o colaborador");return;}
   if(tipo==="saida"&&!setor){alert("Selecione o setor / destino");return;}
+  if(tipo==="ajuste"&&!motivo){alert("Selecione o motivo do ajuste");return;}
   setSalvando(true);
   const item=itens.find(i=>i.id===itemId);
   const qtd=Number($("m-qtd").value);
@@ -801,16 +888,28 @@ window.submitMov=async itemId=>{
 
 Deseja continuar mesmo assim?`)){setSalvando(false);return;}
   }
-  const preco=precoVigente(item);
+  // Se entrada com dados de compra, salva no histórico do item
+  let precoUnitario=precoVigente(item);
+  if(tipo==="entrada"){
+    const cData=$("m-c-data")?.value;
+    const cPreco=parseFloat($("m-c-preco")?.value||"");
+    const cForn=$("m-c-forn")?.value?.trim()||"";
+    if(cData&&!isNaN(cPreco)&&cPreco>0){
+      const novasCompras=[...(item.compras||[]),{data:cData,preco:cPreco,fornecedor:cForn}];
+      await updateDoc(doc(db,"itens",itemId),{compras:novasCompras});
+      precoUnitario=cPreco;
+    }
+  }
   try{
     await updateDoc(doc(db,"itens",itemId),{quantidade:novaQtd});
     await addDoc(collection(db,"movimentacoes"),{
       tipo,quantidade:qtd,responsavel:resp,colaborador:colab,
-      setor, // campo padronizado para o Motor de Custos
+      setor,
+      motivo:tipo==="ajuste"?(motivo+(motivoObs?" — "+motivoObs:"")):"",
       observacao:$("m-obs")?.value?.trim()||"",
       itemId,itemNome:item.nome,itemCodigo:item.codigo||"",itemUnidade:item.unidade||"un",
-      precoUnitario:preco,
-      valorTotal:preco!==null?preco*qtd:null,
+      precoUnitario,
+      valorTotal:precoUnitario!==null?precoUnitario*qtd:null,
       estoqueAntes:Number(item.quantidade),estoqueDepois:novaQtd,
       criadoEm:serverTimestamp()
     });
